@@ -79,7 +79,7 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double =
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
 fun angleInRadian(deg: Int, min: Int, sec: Int): Double =
-   2 * PI * ((3600 * deg + 60 * min + sec) / 360)
+    (2 * PI * (3600 * deg + 60 * min + sec)) / (3600 * 360)
 
 /**
  * Тривиальная
@@ -106,7 +106,7 @@ fun thirdDigit(number: Int): Int = (number / 100) % 10
  * Определите время поезда в пути в минутах (в данном случае 216).
  */
 fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minutesArrive: Int): Int =
-    60 * (hoursDepart - hoursArrive) + minutesDepart + minutesArrive
+    60 * (hoursArrive - hoursDepart - 1) + (60 - minutesDepart) + minutesArrive
 
 /**
  * Простая
@@ -125,5 +125,5 @@ fun accountInThreeYears(initial: Int, percent: Int): Double =
  * Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
 fun numberRevert(number: Int): Int =
-    100 * (number % 10) + 10 * ((number / 10) % 10) + number % 10
+    100 * (number % 10) + 10 * ((number / 10) % 10) + number / 100
 
