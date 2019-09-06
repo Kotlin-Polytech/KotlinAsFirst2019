@@ -20,7 +20,7 @@ class Tests {
         assertEquals("удовлетворительно", gradeNotation(3))
         assertEquals("неудовлетворительно", gradeNotation(2))
         assertEquals("хорошо", gradeNotation(4))
-        assertEquals(1, gradeNotation(1))
+        assertEquals("несуществующая оценка 1", gradeNotation(1))
     }
 
     @Test
