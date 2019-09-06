@@ -65,10 +65,13 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = when (age % 10) {
-    1 -> "$age год"
-    in 2..4 -> "$age года"
-    else -> "$age лет"
+fun ageDescription(age: Int): String {
+    if (age in 11..14 || age in 111..114) return "$age лет"
+    when (age % 10) {
+        1 -> return "$age год"
+        in 2..4 -> return "$age года"
+        else -> return "$age лет"
+    }
 }
 
 /**
@@ -89,8 +92,8 @@ fun timeForHalfWay(
     val half: Double = (s1 + s2 + s3) / 2
     when {
         half <= s1 -> return half / v1
-        half <= s2 -> return t1 + (half - s1) / v2
-        else -> return t1 + t2 + (half - s1 - s2) / v3
+        half <= s2 -> return t1 + ((half - s1) / s2) * t2
+        else -> return t1 + t2 + ((half - s1 - s2) /s3) * t3
     }
 }
 
@@ -153,6 +156,7 @@ fun rookOrBishopThreatens(
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
     val longestSide: Double = max(a, max(b, c))
+    if (longestSide > a + b + c - longestSide) return -1
     val expression: Double = sqr(longestSide) - sqr(a + b + c - longestSide)
     when {
         expression < 0.0 -> return 0
