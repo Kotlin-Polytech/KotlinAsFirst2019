@@ -155,9 +155,9 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val longestSide: Double = max(a, max(b, c))
     val expression: Double = sqr(longestSide) - sqr(a + b + c - longestSide)
     when {
-        expression < 0.0 -> 0
-        expression == 0.0 -> 1
-        expression > 0.0 -> 2
+        expression < 0.0 -> return 0
+        expression == 0.0 -> return 1
+        else -> return 2
     }
 }
 
