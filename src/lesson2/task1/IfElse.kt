@@ -67,10 +67,10 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  */
 fun ageDescription(age: Int): String {
     if (age in 11..14 || age in 111..114) return "$age лет"
-    when (age % 10) {
-        1 -> return "$age год"
-        in 2..4 -> return "$age года"
-        else -> return "$age лет"
+    return when (age % 10) {
+        1 -> "$age год"
+        in 2..4 -> "$age года"
+        else -> "$age лет"
     }
 }
 
@@ -90,10 +90,10 @@ fun timeForHalfWay(
     val s2: Double = v2 * t2
     val s3: Double = v3 * t3
     val half: Double = (s1 + s2 + s3) / 2
-    when {
-        half <= s1 -> return half / v1
-        half <= s1 + s2 -> return t1 + (half - s1) / v2
-        else -> return t1 + t2 + (half - s1 - s2) / v3
+    return when {
+        half <= s1 -> half / v1
+        half <= s1 + s2 -> t1 + (half - s1) / v2
+        else -> t1 + t2 + (half - s1 - s2) / v3
     }
 }
 
@@ -113,11 +113,11 @@ fun whichRookThreatens(
 ): Int {
     val firstState: Boolean = (kingX == rookX1) || (kingY == rookY1)
     val secondState: Boolean = (kingX == rookX2) || (kingY == rookY2)
-    when {
-        firstState and secondState -> return 3
-        firstState -> return 1
-        secondState -> return 2
-        else -> return 0
+    return when {
+        firstState and secondState -> 3
+        firstState -> 1
+        secondState -> 2
+        else -> 0
     }
 }
 
@@ -138,11 +138,11 @@ fun rookOrBishopThreatens(
 ): Int {
     val firstState: Boolean = kingX == rookX || kingY == rookY
     val secondState: Boolean = abs(kingX - bishopX) == abs(kingY - bishopY)
-    when {
-        firstState and secondState -> return 3
-        firstState -> return 1
-        secondState -> return 2
-        else -> return 0
+    return when {
+        firstState and secondState -> 3
+        firstState -> 1
+        secondState -> 2
+        else -> 0
     }
 }
 
@@ -158,17 +158,17 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val longestSide: Double = max(a, max(b, c))
     val otherSides: Double = a + b + c - longestSide
     if (longestSide > otherSides) return -1
-
     val difference: Double
-    when (longestSide) {
-        a -> difference = sqr(longestSide) - sqr(b) - sqr(c)
-        b -> difference = sqr(longestSide) - sqr(a) - sqr(c)
-        else -> difference = sqr(longestSide) - sqr(a) - sqr(b)
+
+    difference = when (longestSide) {
+        a -> sqr(longestSide) - sqr(b) - sqr(c)
+        b -> sqr(longestSide) - sqr(a) - sqr(c)
+        else -> sqr(longestSide) - sqr(a) - sqr(b)
     }
-    when {
-        difference < 0.0 -> return 0
-        difference == 0.0 -> return 1
-        else -> return 2
+    return when {
+        difference < 0.0 -> 0
+        difference == 0.0 -> 1
+        else -> 2
     }
 }
 
@@ -185,10 +185,10 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
     val firstEnd: Int = if (state) b else d
     val secondBegin: Int = if (state) c else a
     val secondEnd: Int = if (state) d else b
-    when {
-        firstEnd < secondBegin -> return -1
-        firstEnd == secondBegin -> return 0
-        firstEnd < secondEnd -> return (firstEnd - secondBegin)
-        else -> return (secondEnd - secondBegin)
+    return when {
+        firstEnd < secondBegin -> -1
+        firstEnd == secondBegin -> 0
+        firstEnd < secondEnd -> (firstEnd - secondBegin)
+        else -> (secondEnd - secondBegin)
     }
 }
