@@ -2,9 +2,8 @@
 
 package lesson3.task1
 
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.math.sqrt
+import lesson1.task1.sqr
+import kotlin.math.*
 
 /**
  * Пример
@@ -142,7 +141,12 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = TODO()
+fun maxDivisor(n: Int): Int {
+    for (i in (n - 1) downTo 2) {
+        if (n % i == 0) return i
+    }
+    return 1
+}
 
 /**
  * Простая
@@ -151,7 +155,12 @@ fun maxDivisor(n: Int): Int = TODO()
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = TODO()
+fun isCoPrime(m: Int, n: Int): Boolean {
+    for (i in 2..min(m, n)) {
+        if ((m % i == 0) && (n % i == 0)) return false
+    }
+    return true
+}
 
 /**
  * Простая
@@ -160,7 +169,11 @@ fun isCoPrime(m: Int, n: Int): Boolean = TODO()
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
+fun squareBetweenExists(m: Int, n: Int): Boolean {
+    val small = sqrt(m.toDouble()).toInt()
+    if (sqr(small) == m) return true
+    return sqr(small + 1) in m..n
+}
 
 /**
  * Средняя
