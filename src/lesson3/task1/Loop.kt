@@ -69,7 +69,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun digitNumber(n: Int): Int {
-    var num: Int = n
+    var num = n
     var count = 0
     do {
         num /= 10
@@ -103,8 +103,8 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var num1: Int = m
-    var num2: Int = n
+    var num1 = m
+    var num2 = n
     var k = 1
     var i = 2
     while ((num1 != 1) or (num2 != 1)) {
@@ -156,8 +156,8 @@ fun maxDivisor(n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    var num1: Int = n
-    var num2: Int = m
+    var num1 = n
+    var num2 = m
     var i = 2
     while (num1 != 1 || num2 != 1) {
         if (num1 % i == 0 && num2 % i == 0) return false
@@ -197,7 +197,13 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int {
+    if (x == 1) return 0
+    return when (x % 2) {
+        0 -> 1 + collatzSteps(x / 2)
+        else -> 1 + collatzSteps(3 * x + 1)
+    }
+}
 
 /**
  * Средняя
