@@ -141,12 +141,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    for (i in (n - 1) downTo 2) {
-        if (n % i == 0) return i
-    }
-    return 1
-}
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая
@@ -214,7 +209,29 @@ fun collatzSteps(x: Int): Int {
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double {
+    var rad = x
+    while (rad > 2 * PI) {
+        rad -= 2 * PI
+    }
+    var current = x
+    var result = 0.0
+    var factorial = 1.0
+    var count = 1
+    var expression = 1.0
+    var minus = 1
+    while (eps < expression) {
+        expression = current / factorial
+        result += minus * expression
+        current *= sqr(rad)
+        count++
+        factorial *= count
+        count++
+        factorial *= count
+        minus *= -1
+    }
+    return result
+}
 
 /**
  * Средняя
@@ -225,7 +242,30 @@ fun sin(x: Double, eps: Double): Double = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double {
+    var rad = x
+    while (rad > 2 * PI) {
+        rad -= 2 * PI
+    }
+    var current = 1.0
+    var result = 0.0
+    var factorial = 1.0
+    var count = 0
+    var expression = 1.0
+    var minus = 1
+    while (eps < expression) {
+        expression = current / factorial
+        result += minus * expression
+        current *= sqr(rad)
+        count++
+        factorial *= count
+        count++
+        factorial *= count
+        minus *= -1
+    }
+    return result
+
+}
 
 /**
  * Средняя
@@ -234,7 +274,18 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var num1 = n
+    var num2 = 0
+    var digit: Int
+    while (num1 > 0) {
+        num2 *= 10
+        digit = num1 % 10
+        num1 /= 10
+        num2 += digit
+    }
+    return num2
+}
 
 /**
  * Средняя
@@ -245,7 +296,16 @@ fun revert(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
+fun isPalindrome(n: Int): Boolean {
+    var num1 = n
+    var num2 = revert(n)
+    for (i in 1..(digitNumber(n) / 2)) {
+        if ((num1 % 10) != (num2 % 10)) return false
+        num1 /= 10
+        num2 /= 10
+    }
+    return true
+}
 
 /**
  * Средняя
@@ -255,7 +315,16 @@ fun isPalindrome(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
+fun hasDifferentDigits(n: Int): Boolean {
+    var num = n
+    val digit = num % 10
+    num /= 10
+    while (num > 0) {
+        if (num % 10 != digit) return true
+        num /= 10
+    }
+    return false
+}
 
 /**
  * Сложная
@@ -266,7 +335,20 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var i = 1
+    var count = 0
+    var num = 0
+    while (count < n) {
+        num = sqr(i)
+        count += digitNumber(num)
+        i++
+    }
+    for (j in 1..(count - n)) {
+        num /= 10
+    }
+    return num % 10
+}
 
 /**
  * Сложная
@@ -277,4 +359,22 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    if (n in 1..2) return 1
+    var i = 1
+    var count = 2
+    var fib1 = 1
+    var fib2 = 1
+    while (count < n) {
+        fib2 += fib1
+        fib1 = fib1 xor fib2
+        fib2 = fib1 xor fib2
+        fib1 = fib1 xor fib2
+        count += digitNumber(fib1)
+        i++
+    }
+    for (j in 1..(count - n)) {
+        fib1 /= 10
+    }
+    return fib1 % 10
+}
