@@ -293,10 +293,10 @@ fun decimalFromString(str: String, base: Int): Int {
     var count = 1
     val line = str.reversed()
     for (i in line) {
-        if (i.isDigit())
-            result += (i.toInt() - '0'.toInt()) * count
+        result += if (i.isDigit())
+            (i.toInt() - '0'.toInt()) * count
         else
-            result += (i.toInt() - 'a'.toInt() + 10) * count
+            (i.toInt() - 'a'.toInt() + 10) * count
         count *= base
     }
     return result
@@ -322,7 +322,7 @@ fun roman(n: Int): String {
             num -= values[digit]
             result += chars[digit]
         }
-        digit ++
+        digit++
     }
     return result
 }
@@ -334,4 +334,64 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    var num1 = listOf(
+        "один",
+        "два",
+        "три",
+        "четыре",
+        "пять",
+        "шесть",
+        "семь",
+        "восемь",
+        "девять"
+    )
+    var num2 = listOf(
+        "десять",
+        "одиннадцать",
+        "двенадцать",
+        "тринадцать",
+        "четырнадцать",
+        "шестнадцать",
+        "семнадцать",
+        "восемнадцать",
+        "девятнадцать"
+    )
+    var num3 = listOf(
+        "двадцать",
+        "тридцать",
+        "сорок",
+        "пятьдесят",
+        "шестьдесят",
+        "семьдесят",
+        "восемьдесят",
+        "девяносто"
+    )
+    var num4 = listOf(
+        "сто",
+        "двести",
+        "триста",
+        "четыреста",
+        "пятьсот",
+        "шестьсот",
+        "семьсот",
+        "восемьсот",
+        "девятьсот"
+    )
+    var num5 = listOf(
+        "одна",
+        "две",
+        "три",
+        "четыре",
+        "пять",
+        "шесть",
+        "семь",
+        "восемь",
+        "девять"
+    )
+    var result = mutableListOf<String>()
+    if (n > 999) {
+        if (n > 99) result.add(num4[n / 100 - 1])
+        else
+    }
+}
