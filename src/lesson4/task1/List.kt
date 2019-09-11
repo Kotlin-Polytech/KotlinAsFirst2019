@@ -150,7 +150,7 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
 fun times(a: List<Int>, b: List<Int>): Int =
-    a.indices.fold(0) { previousResult, i -> previousResult + a[i] * b[i]}
+    a.indices.fold(0) { previousResult, i -> previousResult + a[i] * b[i] }
 
 /**
  * Средняя
@@ -226,7 +226,15 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString("*")
  * Результат перевода вернуть в виде списка цифр в base-ичной системе от старшей к младшей,
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
-fun convert(n: Int, base: Int): List<Int> = TODO()
+fun convert(n: Int, base: Int): List<Int> {
+    val result = mutableListOf<Int>()
+    var num = n
+    while (num > 0) {
+        result.add(num % base)
+        num /= base
+    }
+    return result.reversed()
+}
 
 /**
  * Сложная
@@ -239,7 +247,16 @@ fun convert(n: Int, base: Int): List<Int> = TODO()
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, n.toString(base) и подобные), запрещается.
  */
-fun convertToString(n: Int, base: Int): String = TODO()
+fun convertToString(n: Int, base: Int): String {
+    val list = convert(n, base)
+    var result = ""
+    val latinStart = 'a'.toInt() - 10
+    for (i in list) {
+        if (i < 10) result += i.toString()
+        else result += (latinStart + i).toChar()
+    }
+    return result
+}
 
 /**
  * Средняя
