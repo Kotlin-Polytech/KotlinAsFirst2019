@@ -153,14 +153,14 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
 fun isCoPrime(m: Int, n: Int): Boolean {
     var num1 = n
     var num2 = m
-    var i = 2
-    while (num1 != 1 || num2 != 1) {
-        if (num1 % i == 0 && num2 % i == 0) return false
-        while (num1 % i == 0) num1 /= i
-        while (num2 % i == 0) num2 /= i
-        i++
+    while (num1 != num2) {
+        if (num1 > num2) {
+            num1 -= num2
+        } else {
+            num2 -= num1
+        }
     }
-    return true
+    return num1 == 1
 }
 
 /**
@@ -224,10 +224,8 @@ fun sin(x: Double, eps: Double): Double {
         expression = current / factorial
         result += minus * expression
         current *= sqr(rad)
-        count++
-        factorial *= count
-        count++
-        factorial *= count
+        factorial *= (count + 1) * (count + 2)
+        count += 2
         minus *= -1
     }
     return result
@@ -257,10 +255,8 @@ fun cos(x: Double, eps: Double): Double {
         expression = current / factorial
         result += minus * expression
         current *= sqr(rad)
-        count++
-        factorial *= count
-        count++
-        factorial *= count
+        factorial *= (count + 1) * (count + 2)
+        count += 2
         minus *= -1
     }
     return result
