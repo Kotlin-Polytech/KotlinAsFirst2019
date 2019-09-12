@@ -107,7 +107,7 @@ fun lcm(m: Int, n: Int): Int {
     var num2 = n
     var k = 1
     var i = 2
-    while ((num1 != 1) or (num2 != 1)) {
+    while ((num1 != 1) || (num2 != 1)) {
         var count1 = 0
         while (num1 % i == 0) {
             num1 /= i
@@ -130,7 +130,8 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    for (i in 2..n) {
+    val limit = floor(sqrt(n.toDouble())).toInt() + 1
+    for (i in 2..limit) {
         if (n % i == 0) return i
     }
     return n
@@ -171,7 +172,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    val small = sqrt(m.toDouble()).toInt()
+    val small = floor(sqrt(m.toDouble())).toInt()
     if (sqr(small) == m) return true
     return sqr(small + 1) in m..n
 }
@@ -209,26 +210,34 @@ fun collatzSteps(x: Int): Int {
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double {
-    var rad = x
-    while (rad > 2 * PI) {
-        rad -= 2 * PI
-    }
+
+fun coSin(rad: Double, i: Int, x: Double, eps: Double): Double {
     var current = x
+    var count = i
     var result = 0.0
-    var factorial = 1.0
-    var count = 1
     var expression = 1.0
     var minus = 1
-    while (eps < expression) {
+    var factorial = 1.0
+    do {
         expression = current / factorial
         result += minus * expression
         current *= sqr(rad)
         factorial *= (count + 1) * (count + 2)
         count += 2
         minus *= -1
-    }
+    } while (eps < abs(expression))
     return result
+}
+
+fun sin(x: Double, eps: Double): Double {
+    var rad = x
+    while (rad > 2 * PI) {
+        rad -= 2 * PI
+    }
+    while (rad < 2 * PI) {
+        rad += 2 * PI
+    }
+    return coSin(rad, 1, rad, eps)
 }
 
 /**
@@ -245,22 +254,10 @@ fun cos(x: Double, eps: Double): Double {
     while (rad > 2 * PI) {
         rad -= 2 * PI
     }
-    var current = 1.0
-    var result = 0.0
-    var factorial = 1.0
-    var count = 0
-    var expression = 1.0
-    var minus = 1
-    while (eps < expression) {
-        expression = current / factorial
-        result += minus * expression
-        current *= sqr(rad)
-        factorial *= (count + 1) * (count + 2)
-        count += 2
-        minus *= -1
+    while (rad < 2 * PI) {
+        rad += 2 * PI
     }
-    return result
-
+    return coSin(rad, 0, 1.0, eps)
 }
 
 /**
