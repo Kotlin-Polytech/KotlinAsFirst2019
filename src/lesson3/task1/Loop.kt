@@ -215,7 +215,7 @@ fun coSin(rad: Double, i: Int, x: Double, eps: Double): Double {
     var current = x
     var count = i
     var result = 0.0
-    var expression = 1.0
+    var expression: Double
     var minus = 1
     var factorial = 1.0
     do {
@@ -290,14 +290,14 @@ fun revert(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun isPalindrome(n: Int): Boolean {
-    var num1 = n
-    var num2 = revert(n)
-    for (i in 1..(digitNumber(n) / 2)) {
-        if ((num1 % 10) != (num2 % 10)) return false
-        num1 /= 10
-        num2 /= 10
+    val num1 = n
+    val num2 = revert(n)
+    val halfLen = digitNumber(n) / 2
+    var ten = 10
+    for (i in 2..halfLen) {
+        ten *= 10
     }
-    return true
+    return (num1 / ten) == (num2 / ten)
 }
 
 /**
@@ -328,6 +328,14 @@ fun hasDifferentDigits(n: Int): Boolean {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
+fun divivideByTen(n: Int, count: Int): Int {
+    var num = n
+    for (j in 1..count) {
+        num /= 10
+    }
+    return num
+}
+
 fun squareSequenceDigit(n: Int): Int {
     var i = 1
     var count = 0
@@ -337,10 +345,7 @@ fun squareSequenceDigit(n: Int): Int {
         count += digitNumber(num)
         i++
     }
-    for (j in 1..(count - n)) {
-        num /= 10
-    }
-    return num % 10
+    return divivideByTen(num, count - n) % 10
 }
 
 /**
@@ -366,8 +371,5 @@ fun fibSequenceDigit(n: Int): Int {
         count += digitNumber(fib1)
         i++
     }
-    for (j in 1..(count - n)) {
-        fib1 /= 10
-    }
-    return fib1 % 10
+    return divivideByTen(fib1, count - n) % 10
 }
