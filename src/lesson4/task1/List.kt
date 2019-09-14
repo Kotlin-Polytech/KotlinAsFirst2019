@@ -3,6 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson3.task1.minDivisor
 import kotlin.math.sqrt
 
 /**
@@ -198,20 +199,14 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
  */
 fun factorize(n: Int): List<Int> {
     var num = n
-    var i = 2
     val result = mutableListOf<Int>()
+    var divisor: Int
     while (num > 1) {
-        while (num % i == 0) {
-            if (i > sqrt(1.0 * num)) {
-                result.add(num)
-                return result
-            }
-            result.add(i)
-            num /= i
-        }
-        i++
+        divisor = minDivisor(num)
+        result.add(divisor)
+        num /= divisor
     }
-    return result
+    return result.toList()
 }
 
 /**
