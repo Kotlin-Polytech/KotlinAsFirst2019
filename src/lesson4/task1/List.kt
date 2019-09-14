@@ -333,4 +333,100 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val from1To9 = listOf(
+        "",
+        "один",
+        "два",
+        "три",
+        "четыре",
+        "пять",
+        "шесть",
+        "семь",
+        "восемь",
+        "девять"
+    )
+    val from1To9Thousands = listOf(
+        "тысяч",
+        "одна тысяча",
+        "две тысячи",
+        "три тысячи",
+        "четыре тысячи",
+        "пять тысяч",
+        "шесть тысяч",
+        "семь тысяч",
+        "восемь тысяч",
+        "девять тысяч"
+    )
+    val from10To19 = listOf(
+        "десять",
+        "одиннадцать",
+        "двенадцать",
+        "тринадцать",
+        "четырнадцать",
+        "пятнадцать",
+        "шестнадцать",
+        "семнадцать",
+        "восемнадцать",
+        "девятнадцать"
+    )
+    val from20To90 = listOf(
+        "",
+        "",
+        "двадцать",
+        "тридцать",
+        "сорок",
+        "пятьдесят",
+        "шестьдесят",
+        "семьдесят",
+        "восемьдесят",
+        "девяносто"
+    )
+    val from100To900 = listOf(
+        "",
+        "сто",
+        "двести",
+        "триста",
+        "четыреста",
+        "пятьсот",
+        "шестьсот",
+        "семьсот",
+        "восемьсот",
+        "девятьсот"
+    )
+
+    val digits = arrayOf(0, 0, 0, 0, 0, 0)
+    var num = n
+    var i = 0
+    while (num > 0) {
+        digits[i] = (num % 10)
+        num /= 10
+        i++
+    }
+
+    val result = mutableListOf<String>()
+
+    if (n >= 1000) {
+        if (digits[4] == 1) {
+            result.add(from100To900[digits[5]])
+            result.add(from10To19[digits[3]])
+            result.add(from1To9Thousands[0])
+        } else {
+            result.add(from100To900[digits[5]])
+            result.add(from20To90[digits[4]])
+            result.add(from1To9Thousands[digits[3]])
+        }
+    }
+
+    if (digits[1] == 1) {
+        result.add(from100To900[digits[2]])
+        result.add(from10To19[digits[0]])
+    } else {
+        result.add(from100To900[digits[2]])
+        result.add(from20To90[digits[1]])
+        result.add(from1To9[digits[0]])
+    }
+
+    while ("" in result) result.remove("")
+    return result.joinToString(" ")
+}
