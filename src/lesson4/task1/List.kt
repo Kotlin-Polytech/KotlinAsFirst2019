@@ -202,6 +202,10 @@ fun factorize(n: Int): List<Int> {
     val result = mutableListOf<Int>()
     while (num > 1) {
         while (num % i == 0) {
+            if (i > sqrt(1.0 * num)) {
+                result.add(num)
+                return result
+            }
             result.add(i)
             num /= i
         }
