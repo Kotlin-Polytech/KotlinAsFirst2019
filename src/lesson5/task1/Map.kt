@@ -303,6 +303,7 @@ fun connect(passed: Set<String>, currentName: String, friends: Map<String, Set<S
     val result = mutableSetOf<String>()
     for (name in friendList) {
         if (name !in passed) {
+            result.add(name)
             result.addAll(connect(passed + currentName, name, friends))
         }
     }
