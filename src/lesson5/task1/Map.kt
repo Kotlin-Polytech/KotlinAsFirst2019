@@ -255,7 +255,13 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean =
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
+fun extractRepeats(list: List<String>): Map<String, Int> {
+    val repeats = mutableMapOf<String, Int>()
+    for (name in list) {
+        repeats[name] = (repeats[name] ?: 0) + 1
+    }
+    return repeats.filter { it.value > 1 }.toMap()
+}
 
 /**
  * Средняя
@@ -266,7 +272,7 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean = TODO()
+fun hasAnagrams(words: List<String>): Boolean = words.count() > words.map { it.toSet() }.toSet().count()
 
 /**
  * Сложная
