@@ -298,7 +298,33 @@ fun hasAnagrams(words: List<String>): Boolean = words.count() > words.map { it.t
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
+fun connect(firstName: String, lastName: String, friends: Map<String, Set<String>>): MutableSet<String> {
+    val result = mutableSetOf<String>()
+    val friendList = friends[lastName] ?: setOf()
+    if (lastName != firstName) result.add(lastName)
+    for (name in friendList) {
+        if ((name !in result) && (name != firstName)) {
+            result.addAll(connect(firstName, name, friends))
+        }
+    }
+    return result
+}
+
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    val result = mutableMapOf<String, Set<String>>()
+    val everyoneElse = mutableSetOf<String>()
+    for (name in friends.keys) {
+        val friendList = connect(name, name, friends).toSet()
+        result[name] = friendList
+        everyoneElse.addAll(friendList)
+    }
+    for (name in everyoneElse) {
+        if (name !in result.keys) {
+            result[name] = setOf()
+        }
+    }
+    return result.toMap()
+}
 
 /**
  * Сложная
