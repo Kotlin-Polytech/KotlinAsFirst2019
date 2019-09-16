@@ -221,14 +221,16 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
     var min = Double.MAX_VALUE
     var minName = ""
+    var trigger = false
     for ((name, pair) in stuff) {
         if (pair.first == kind)
             if (pair.second < min) {
+                trigger = true
                 minName = name
                 min = pair.second
             }
     }
-    return if (minName == "") null else minName
+    return if (trigger) minName else null
 }
 
 /**
@@ -298,6 +300,8 @@ fun hasAnagrams(words: List<String>): Boolean = words.count() > words.map { it.t
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
+fun friendChain(friends: Map<String, Set<String>>, inList: Set<String>): Set<String> = TODO()
+
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
 
 /**
