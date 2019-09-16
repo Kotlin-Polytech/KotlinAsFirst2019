@@ -278,13 +278,13 @@ fun revert(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun isPalindrome(n: Int): Boolean {
-    val num = revert(n)
+    val reversedNum = revert(n)
     val halfLen = digitNumber(n) / 2
     var ten = 10
     for (i in 2..halfLen) {
         ten *= 10
     }
-    return (n / ten) == (num / ten)
+    return (n / ten) == (reversedNum / ten)
 }
 
 /**
