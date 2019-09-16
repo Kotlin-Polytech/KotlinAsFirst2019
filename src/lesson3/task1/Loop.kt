@@ -230,13 +230,7 @@ fun coSin(rad: Double, i: Int, x: Double, eps: Double): Double {
 }
 
 fun sin(x: Double, eps: Double): Double {
-    var rad = x
-    while (rad > 2 * PI) {
-        rad -= 2 * PI
-    }
-    while (rad < 2 * PI) {
-        rad += 2 * PI
-    }
+    val rad = x % (2 * PI)
     return coSin(rad, 1, rad, eps)
 }
 
@@ -250,13 +244,7 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x: Double, eps: Double): Double {
-    var rad = x
-    while (rad > 2 * PI) {
-        rad -= 2 * PI
-    }
-    while (rad < 2 * PI) {
-        rad += 2 * PI
-    }
+    val rad = x % (2 * PI)
     return coSin(rad, 0, 1.0, eps)
 }
 
@@ -290,14 +278,13 @@ fun revert(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun isPalindrome(n: Int): Boolean {
-    val num1 = n
-    val num2 = revert(n)
+    val num = revert(n)
     val halfLen = digitNumber(n) / 2
     var ten = 10
     for (i in 2..halfLen) {
         ten *= 10
     }
-    return (num1 / ten) == (num2 / ten)
+    return (n / ten) == (num / ten)
 }
 
 /**
@@ -328,7 +315,7 @@ fun hasDifferentDigits(n: Int): Boolean {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun divivideByTen(n: Int, count: Int): Int {
+fun divideByTen(n: Int, count: Int): Int {
     var num = n
     for (j in 1..count) {
         num /= 10
@@ -345,7 +332,7 @@ fun squareSequenceDigit(n: Int): Int {
         count += digitNumber(num)
         i++
     }
-    return divivideByTen(num, count - n) % 10
+    return divideByTen(num, count - n) % 10
 }
 
 /**
@@ -371,5 +358,5 @@ fun fibSequenceDigit(n: Int): Int {
         count += digitNumber(fib1)
         i++
     }
-    return divivideByTen(fib1, count - n) % 10
+    return divideByTen(fib1, count - n) % 10
 }
