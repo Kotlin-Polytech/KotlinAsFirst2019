@@ -358,7 +358,9 @@ fun treasureRate(treasures: Map<String, Pair<Int, Int>>): List<String> {
     val rating = mutableMapOf<Double, Set<String>>()
     for ((treasure, value) in treasures) {
         val ratio = 1.0 * value.second / value.first
-        rating[ratio] = rating[ratio] ?: setOf<String>() + treasure
+        if (ratio in rating.keys) {
+            rating[ratio] = rating[ratio]!! + treasure
+        } else rating[ratio] = setOf(treasure)
     }
     val ratingList = rating.keys.sortedDescending()
     val result = mutableListOf<String>()
@@ -377,12 +379,10 @@ fun treasurePack(
 ): Pair<Set<String>, Int> {
     val variants = mutableMapOf<Int, Set<String>>()
     for (index in lastIndex until rating.size) {
-
         val treasure = rating[index]
         val weight = treasures[treasure]!!.first
         val potentialWeight = weight + currentWeight
         val treasureCost = treasures[treasure]!!.second
-
         if (potentialWeight <= capacity) {
             val nextTreasures = treasurePack(index + 1, potentialWeight, capacity, rating, treasures)
             val cost = treasureCost + nextTreasures.second
