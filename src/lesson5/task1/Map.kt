@@ -354,4 +354,48 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun treasureRate(treasures: Map<String, Pair<Int, Int>>): List<String> {
+    val rating = mutableMapOf<Double, Set<String>>()
+    for ((treasure, value) in treasures) {
+        val ratio = 1.0 * value.second / value.first
+        rating[ratio] = rating[ratio] ?: setOf<String>() + treasure
+    }
+    val ratingList = rating.keys.sortedDescending()
+    val result = mutableListOf<String>()
+    for (i in ratingList) {
+        result.addAll(rating[i]!!)
+    }
+    return result
+}
+
+fun treasurePack(
+    lastIndex: Int,
+    currentWeight: Int,
+    capacity: Int,
+    rating: List<String>,
+    treasures: Map<String, Pair<Int, Int>>
+): Pair<Set<String>, Int> {
+
+    val variants = mutableMapOf<Int, Set<String>>()
+    for (index in lastIndex until rating.size) {
+
+        val treasure = rating[index]
+        val weight = treasures[treasure]!!.first
+        val potentialWeight = weight + currentWeight
+
+        if (potentialWeight <= capacity) {
+            val nextTreasures = treasurePack(index + 1, potentialWeight, capacity, rating, treasures)
+            if (nextTreasures.first.isEmpty()) continue
+            val cost = treasures[treasure]!!.second + nextTreasures.second
+            variants[cost] = nextTreasures.first
+        }
+    }
+    if (variants.isNotEmpty()) {
+        val bestChoice = variants.keys.max()!!
+        return Pair(variants[bestChoice]!!, bestChoice)
+    }
+    return Pair(setOf(), -1)
+}
+
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> =
+    treasurePack(0, 0, capacity, treasureRate(treasures), treasures).first
