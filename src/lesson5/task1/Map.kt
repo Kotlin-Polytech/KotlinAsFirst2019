@@ -224,7 +224,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
     var trigger = false
     for ((name, pair) in stuff) {
         if (pair.first == kind)
-            if (pair.second < min) {
+            if (pair.second <= min) {
                 trigger = true
                 minName = name
                 min = pair.second
