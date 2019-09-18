@@ -229,10 +229,8 @@ fun coSin(rad: Double, i: Int, x: Double, eps: Double): Double {
     return result
 }
 
-fun sin(x: Double, eps: Double): Double {
-    val rad = x % (2 * PI)
-    return coSin(rad, 1, rad, eps)
-}
+fun sin(x: Double, eps: Double): Double = coSin(x % (2 * PI), 1, x % (2 * PI), eps)
+
 
 /**
  * Средняя
@@ -243,10 +241,7 @@ fun sin(x: Double, eps: Double): Double {
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
-fun cos(x: Double, eps: Double): Double {
-    val rad = x % (2 * PI)
-    return coSin(rad, 0, 1.0, eps)
-}
+fun cos(x: Double, eps: Double) = coSin(x % (2 * PI), 0, 1.0, eps)
 
 /**
  * Средняя

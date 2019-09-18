@@ -300,30 +300,8 @@ fun hasAnagrams(words: List<String>): Boolean = words.count() > words.map { it.t
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
-fun friendChain(name: String, allFriends: Map<String, Set<String>>, inList: Set<String>): Set<String> {
-    val friendList = allFriends[name] ?: setOf()
-    val result = mutableSetOf(name)
-    val inUpdatedList = inList + name
-    for (friend in friendList) {
-        if (friend !in inList) result.addAll(friendChain(friend, allFriends, inUpdatedList))
-    }
-    return result.toSet()
-}
-
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
-    val allFriends = friends.toMutableMap()
-    val alone = mutableSetOf<String>()
-    for (name in allFriends.keys) {
-        val friendList = friendChain(name, allFriends, setOf(name)) - name
-        allFriends[name] = friendList
-        alone.addAll(friendList - allFriends.keys)
-    }
-    for (name in alone) {
-        allFriends[name] = setOf()
-    }
-    return allFriends.toMap()
-}
-
+fun friendChain(name: String, friendList: MutableMap<String, Set<String>>): Unit = TODO()
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
 /**
  * Сложная
  *
