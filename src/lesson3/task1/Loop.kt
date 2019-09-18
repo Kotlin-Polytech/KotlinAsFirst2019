@@ -314,13 +314,13 @@ fun findDigit(n: Int, nextIteration: (Int, Int, Int) -> Pair<Int, Int>): Int {
     var prevNum = 0
     var nextNum = 1
     var count = 0
-    var p = 2
+    var addition = 2
     while (count < n) {
         count += digitNumber(nextNum)
-        val result = nextIteration(prevNum, nextNum, p)
+        val result = nextIteration(prevNum, nextNum, addition)
         prevNum = nextNum
         nextNum = result.first
-        p = result.second
+        addition = result.second
     }
     for (j in 1..(count - n)) {
         prevNum /= 10
@@ -329,7 +329,7 @@ fun findDigit(n: Int, nextIteration: (Int, Int, Int) -> Pair<Int, Int>): Int {
 }
 
 fun squareSequenceDigit(n: Int) =
-    findDigit(n) { _, _, p -> Pair(sqr(p), p + 1)}
+    findDigit(n) { _, _, addition -> Pair(sqr(addition), addition + 1) }
 
 /**
  * Сложная
