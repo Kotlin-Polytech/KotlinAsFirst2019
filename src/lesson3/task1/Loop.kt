@@ -310,25 +310,26 @@ fun hasDifferentDigits(n: Int): Boolean {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun divideByTen(n: Int, count: Int): Int {
-    var num = n
-    for (j in 1..count) {
-        num /= 10
+fun findDigit(n: Int, nextIteration: (Int, Int, Int) -> Pair<Int, Int>): Int {
+    var prevNum = 0
+    var nextNum = 1
+    var count = 0
+    var p = 2
+    while (count < n) {
+        count += digitNumber(nextNum)
+        val result = nextIteration(prevNum, nextNum, p)
+        prevNum = nextNum
+        nextNum = result.first
+        p = result.second
     }
-    return num
+    for (j in 1..(count - n)) {
+        prevNum /= 10
+    }
+    return prevNum % 10
 }
 
-fun squareSequenceDigit(n: Int): Int {
-    var i = 1
-    var count = 0
-    var num = 0
-    while (count < n) {
-        num = sqr(i)
-        count += digitNumber(num)
-        i++
-    }
-    return divideByTen(num, count - n) % 10
-}
+fun squareSequenceDigit(n: Int) =
+    findDigit(n) { _, _, p -> Pair(sqr(p), p + 1)}
 
 /**
  * Сложная
@@ -339,19 +340,5 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int {
-    if (n in 1..2) return 1
-    var i = 1
-    var count = 2
-    var fib1 = 1
-    var fib2 = 1
-    while (count < n) {
-        fib2 += fib1
-        fib1 = fib1 xor fib2
-        fib2 = fib1 xor fib2
-        fib1 = fib1 xor fib2
-        count += digitNumber(fib1)
-        i++
-    }
-    return divideByTen(fib1, count - n) % 10
-}
+fun fibSequenceDigit(n: Int) =
+    findDigit(n) { prevNum, nextNum, _ -> Pair(prevNum + nextNum, 1) }
