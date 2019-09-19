@@ -304,8 +304,8 @@ fun hasAnagrams(words: List<String>): Boolean = words.count() > words.map { it.t
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
-fun friendChain(name: String, friendList: MutableMap<String, Set<String>>): Unit = TODO()
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
+
 /**
  * Сложная
  *
@@ -358,47 +358,29 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun treasureRate(treasures: Map<String, Pair<Int, Int>>): List<String> {
-    val rating = mutableMapOf<Double, Set<String>>()
-    for ((treasure, value) in treasures) {
-        val ratio = 1.0 * value.second / value.first
-        if (ratio in rating.keys) {
-            rating[ratio] = rating[ratio]!! + treasure
-        } else rating[ratio] = setOf(treasure)
-    }
-    val ratingList = rating.keys.sortedDescending()
-    val result = mutableListOf<String>()
-    for (i in ratingList) {
-        result.addAll(rating[i]!!)
-    }
-    return result
-}
-
-fun treasurePack(
-    lastIndex: Int,
-    currentWeight: Int,
-    capacity: Int,
-    rating: List<String>,
-    treasures: Map<String, Pair<Int, Int>>
-): Pair<Set<String>, Int> {
-    val variants = mutableMapOf<Int, Set<String>>()
-    for (index in lastIndex until rating.size) {
-        val treasure = rating[index]
-        val weight = treasures[treasure]!!.first
-        val potentialWeight = weight + currentWeight
-        val treasureCost = treasures[treasure]!!.second
-        if (potentialWeight <= capacity) {
-            val nextTreasures = treasurePack(index + 1, potentialWeight, capacity, rating, treasures)
-            val cost = treasureCost + nextTreasures.second
-            variants[cost] = nextTreasures.first + treasure
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val valueList = mutableListOf(0)
+    val packList = mutableListOf(setOf<String>())
+    var maxElements = setOf<String>()
+    for (weight in 1 until capacity) {
+        var maxCost = -1
+        maxElements = setOf<String>()
+        for ((treasure, data) in treasures) {
+            val index = weight - data.first
+            if (index >= 0) {
+                val currentCost = data.second + valueList[index]
+                if ((currentCost >= maxCost) && (treasure !in packList[index])) {
+                    maxCost = currentCost
+                    maxElements = packList[index] + treasure
+                }
+            }
+        }
+        if (maxCost == -1) {
+            valueList.add(valueList[weight - 1])
+        } else {
+            valueList.add(maxCost)
+            packList.add(maxElements)
         }
     }
-    if (variants.isNotEmpty()) {
-        val bestChoice = variants.keys.max()!!
-        return Pair(variants[bestChoice]!!, bestChoice)
-    }
-    return Pair(setOf(), -1)
+    return(maxElements)
 }
-
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> =
-    treasurePack(0, 0, capacity, treasureRate(treasures), treasures).first
