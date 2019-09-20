@@ -362,7 +362,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     val valueList = mutableListOf(0)
     val packList = mutableListOf(setOf<String>())
     var maxElements = setOf<String>()
-    for (weight in 1 until capacity) {
+    for (weight in 1..capacity) {
         var maxCost = -1
         maxElements = setOf<String>()
         for ((treasure, data) in treasures) {
@@ -377,6 +377,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         }
         if (maxCost == -1) {
             valueList.add(valueList[weight - 1])
+            packList.add(setOf())
         } else {
             valueList.add(maxCost)
             packList.add(maxElements)
