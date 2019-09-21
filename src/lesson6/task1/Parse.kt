@@ -171,21 +171,11 @@ fun dateDigitToStr(digital: String): String {
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String {
-    val pack = listOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', ' ', '+', '(', ')')
-    if (!canBuildFrom(pack, phone) || ('+' in phone && !phone.startsWith('+'))) {
-        return ""
-    }
-    val countLeft = phone.count { it == '(' }
-    val countRight = phone.count { it == ')' }
-    if (countLeft != countRight || countLeft > 1 || countRight > 1) {
-        return ""
-    }
-    if (phone.indexOf('(') > phone.indexOf(')')) {
-        return ""
-    }
-    return phone.filter { it !in listOf('-', ' ', '(', ')') }
-}
+fun flattenPhoneNumber(phone: String) =
+    if (phone.matches(Regex("""([+][ -]*[0-9])?[0-9 -]*([(][0-9 -]+[)])?[0-9 -]*""")))
+        phone.filter { it !in listOf(' ', '-', '(', ')') }
+    else ""
+
 
 /**
  * Средняя
