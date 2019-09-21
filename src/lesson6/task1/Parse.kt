@@ -216,7 +216,19 @@ fun bestLongJump(jumps: String): Int {
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    if (!jumps.matches(Regex("""(([0-9]+ [+%-]+ )*([0-9]+ [+%-]+))|([0-9]+ [+%-]+)"""))) {
+        return -1
+    }
+    val parts = jumps.split(' ')
+    var max = -1
+    for (i in parts.indices step 2) {
+        if ((parts[i].toInt() > max) && ('+' in parts[i + 1])) {
+            max = parts[i].toInt()
+        }
+    }
+    return max
+}
 
 /**
  * Сложная
