@@ -4,6 +4,7 @@ package lesson6.task1
 
 import lesson2.task2.daysInMonth
 import lesson5.task1.canBuildFrom
+import java.lang.IllegalArgumentException
 import java.lang.IndexOutOfBoundsException
 import java.lang.NumberFormatException
 
@@ -239,7 +240,22 @@ fun bestHighJump(jumps: String): Int {
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    try {
+        require(expression.matches(Regex("""([0-9]+ [+-] )*[0-9]+""")))
+        val parts = expression.split(' ')
+        var result = parts[0].toInt()
+        for (i in 2 until parts.size step 2) {
+            if (parts[i - 1] == "+") {
+                result += parts[i].toInt()
+            } else {
+                result -= parts[i].toInt()
+            }
+        }
+        return result
+    } finally {
+    }
+}
 
 /**
  * Сложная
