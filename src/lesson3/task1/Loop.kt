@@ -310,26 +310,26 @@ fun hasDifferentDigits(n: Int): Boolean {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun findDigit(n: Int, nextIteration: (Int, Int, Int) -> Pair<Int, Int>): Int {
-    var prevNum = 0
-    var nextNum = 1
-    var count = 0
-    var addition = 2
+fun findDigit(n: Int, funParam: Int, firstElem: Int, nextElem: (Int, Int, Int) -> Pair<Int, Int>): Int {
+    var currentNum = firstElem
+    var prevNum = firstElem
+    var param = funParam
+    var count = digitNumber(firstElem)
     while (count < n) {
-        count += digitNumber(nextNum)
-        val result = nextIteration(prevNum, nextNum, addition)
-        prevNum = nextNum
-        nextNum = result.first
-        addition = result.second
+        val nextNum = nextElem(prevNum, currentNum, param)
+        prevNum = currentNum
+        currentNum = nextNum.first
+        param = nextNum.second
+        count += digitNumber(currentNum)
     }
     for (j in 1..(count - n)) {
-        prevNum /= 10
+        currentNum /= 10
     }
-    return prevNum % 10
+    return currentNum % 10
 }
 
 fun squareSequenceDigit(n: Int) =
-    findDigit(n) { _, _, addition -> Pair(sqr(addition), addition + 1) }
+    findDigit(n, 2, 1) { _, _, param -> Pair(sqr(param), param + 1)}
 
 /**
  * Сложная
@@ -341,4 +341,4 @@ fun squareSequenceDigit(n: Int) =
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun fibSequenceDigit(n: Int) =
-    findDigit(n) { prevNum, nextNum, _ -> Pair(prevNum + nextNum, 1) }
+    findDigit(n, 0, 1) { _, currentNum, param -> Pair(currentNum + param, currentNum)}
