@@ -2,6 +2,11 @@
 
 package lesson6.task1
 
+import lesson2.task2.daysInMonth
+import lesson5.task1.canBuildFrom
+import java.lang.IndexOutOfBoundsException
+import java.lang.NumberFormatException
+
 /**
  * Пример
  *
@@ -69,7 +74,42 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val months = listOf(
+        "",
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+    try {
+        val parts = str.split(" ")
+        if (parts.size != 3) {
+            return ""
+        }
+        val day = parts[0].toInt()
+        val month = parts[1]
+        val year = parts[2].toInt()
+        val monthNum = months.indexOf(month)
+        if (monthNum == -1) {
+            return ""
+        }
+        if ((day < 1) || (day > daysInMonth(monthNum, year))) {
+            return ""
+        }
+        return String.format("%02d.%02d.%d", day, monthNum, year)
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+}
 
 /**
  * Средняя
@@ -81,7 +121,41 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val months = listOf(
+        "",
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+    try {
+        val parts = digital.split(".")
+        if (parts.size != 3) {
+            return ""
+        }
+        val day = parts[0].toInt()
+        val month = parts[1].toInt()
+        val year = parts[2].toInt()
+        if (month !in 1..12) {
+            return ""
+        }
+        if (day > daysInMonth(month, year)) {
+            return ""
+        }
+        return String.format("%d %s %d", day, months[month], year)
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+}
 
 /**
  * Средняя
@@ -97,7 +171,21 @@ fun dateDigitToStr(digital: String): String = TODO()
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    val pack = listOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', ' ', '+', '(', ')')
+    if (!canBuildFrom(pack, phone) || ('+' in phone && !phone.startsWith('+'))) {
+        return ""
+    }
+    val countLeft = phone.count { it == '(' }
+    val countRight = phone.count { it == ')' }
+    if (countLeft != countRight || countLeft > 1 || countRight > 1) {
+        return ""
+    }
+    if (phone.indexOf('(') > phone.indexOf(')')) {
+        return ""
+    }
+    return phone.filter { it !in listOf('-', ' ', '(', ')') }
+}
 
 /**
  * Средняя

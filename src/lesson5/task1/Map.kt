@@ -79,8 +79,6 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
     for (word in text) res.add(word)
     return res
 }
-
-
 /**
  * Простая
  *
