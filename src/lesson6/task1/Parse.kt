@@ -322,8 +322,28 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
-
+fun fromRoman(roman: String): Int {
+    if (!roman.matches(Regex("""M*(CM)?D{0,4}(CD)?C{0,4}(XC)?L{0,4}(XL)?X{0,4}(IX)?V{0,4}(IV)?I{0,4}"""))) {
+        return -1
+    }
+    val romans = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
+    val numbers = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
+    var index = roman.length - 1
+    var result = 0
+    while (index >= 0) {
+        val doubleRoman = if (index > 0) {
+            romans.indexOf(roman.slice(index - 1..index))
+        } else -1
+        if (doubleRoman != -1) {
+            result += numbers[doubleRoman]
+            index -= 2
+        } else {
+            result += numbers[romans.indexOf(roman[index].toString())]
+            index -= 1
+        }
+    }
+    return result
+}
 /**
  * Очень сложная
  *
