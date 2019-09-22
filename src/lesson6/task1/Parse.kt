@@ -323,6 +323,7 @@ fun mostExpensive(description: String): String {
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int {
+    if (roman.isEmpty()) return -1
     if (!roman.matches(Regex("""M*(CM)?D{0,4}(CD)?C{0,4}(XC)?L{0,4}(XL)?X{0,4}(IX)?V{0,4}(IV)?I{0,4}"""))) {
         return -1
     }
