@@ -345,6 +345,7 @@ fun fromRoman(roman: String): Int {
     }
     return result
 }
+
 /**
  * Очень сложная
  *
@@ -381,4 +382,36 @@ fun fromRoman(roman: String): Int {
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun cycle(position: Int, oPosition: Int, count: Int, grid: MutableList<Int>, limit: Int, commands: String): List<Int> {
+
+}
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    require(commands.matches(Regex("""([+->< ]*)|(\[[+->< ]+])""")))
+    val grid = mutableListOf<Int>()
+    for (i in 1..cells) {
+        grid.add(0)
+    }
+    var position = cells / 2
+    var oPosition = 0
+    var count = 0
+    while ((count < limit) && (oPosition < commands.length)) {
+        check((position >= 0) && (position < cells))
+        when (commands[oPosition]) {
+            '>' -> position += 1
+            '<' -> position -= 1
+            '+' -> grid[position] += 1
+            '-' -> grid[position] -= 1
+            ' ' -> {
+            }
+            else -> {
+                val interResult = cycle(position, oPosition, count, grid, limit, commands)
+                position = interResult[0]
+                oPosition = interResult[1]
+                count = interResult[2]
+            }
+        }
+        oPosition++
+        count++
+    }
+    return grid.toList()
+}
