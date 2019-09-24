@@ -382,8 +382,17 @@ fun fromRoman(roman: String): Int {
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun cycle(position: Int, oPosition: Int, count: Int, grid: MutableList<Int>, limit: Int, commands: String): List<Int> {
-
+fun findNextBracket(line: String, pos: Int): Int {
+    var countLeft = 1
+    var countRight = 0
+    for (i in pos until line.length) {
+        when (line[i]) {
+            '[' -> countLeft++
+            ']' -> countRight++
+        }
+        if (countLeft == countRight) return i
+    }
+    return -1
 }
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     require(commands.matches(Regex("""([+->< ]*)|(\[[+->< ]+])""")))
@@ -394,24 +403,21 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var position = cells / 2
     var oPosition = 0
     var count = 0
-    while ((count < limit) && (oPosition < commands.length)) {
-        check((position >= 0) && (position < cells))
+    val order = mutableListOf<Int>()
+    while ((oPosition < commands.length) && (count < limit)) {
+        check(position in 0 until cells)
         when (commands[oPosition]) {
-            '>' -> position += 1
-            '<' -> position -= 1
-            '+' -> grid[position] += 1
-            '-' -> grid[position] -= 1
-            ' ' -> {
-            }
-            else -> {
-                val interResult = cycle(position, oPosition, count, grid, limit, commands)
-                position = interResult[0]
-                oPosition = interResult[1]
-                count = interResult[2]
-            }
+            '<' -> position--
+            '>' -> position++
+            '+' -> grid[position]++
+            '-' -> grid[position]--
+            '[' -> if (grid[position] == 0) oPosition = findNextBracket(commands, position)
+            else order.add(oPosition)
+            ']' -> if (grid[position] != 0) oPosition = order.last()
+            else order.remove(order.last())
         }
-        oPosition++
         count++
+        oPosition++
     }
     return grid.toList()
 }
