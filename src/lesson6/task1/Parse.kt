@@ -383,14 +383,13 @@ fun fromRoman(roman: String): Int {
  *
  */
 fun findNextBracket(line: String, pos: Int): Int {
-    var countLeft = 0
-    var countRight = 0
+    var count = 0
     for (i in pos until line.length) {
         when (line[i]) {
-            '[' -> countLeft++
-            ']' -> countRight++
+            '[' -> count++
+            ']' -> count--
         }
-        if (countLeft == countRight) return i
+        if (count == 0) return i
     }
     return -1
 }
@@ -433,5 +432,6 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         count++
         oPosition++
     }
+    check(position in 0 until cells)
     return grid.toList()
 }
