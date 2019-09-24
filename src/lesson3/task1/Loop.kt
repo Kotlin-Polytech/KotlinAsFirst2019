@@ -130,7 +130,7 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    val limit = floor(sqrt(n.toDouble())).toInt() + 1
+    val limit = ceil(sqrt(n.toDouble())).toInt()
     for (i in 2..limit) {
         if (n % i == 0) return i
     }
@@ -273,13 +273,13 @@ fun revert(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun isPalindrome(n: Int): Boolean {
-    val reversedNum = revert(n)
-    val halfLen = digitNumber(n) / 2
-    var ten = 10
-    for (i in 2..halfLen) {
-        ten *= 10
+    var reversedNum = 0
+    var copyNum = n
+    while (copyNum > 0) {
+        reversedNum = reversedNum * 10 + copyNum % 10
+        copyNum /= 10
     }
-    return (n / ten) == (reversedNum / ten)
+    return reversedNum == n
 }
 
 /**

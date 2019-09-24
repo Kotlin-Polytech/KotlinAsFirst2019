@@ -135,7 +135,6 @@ fun mean(list: List<Double>): Double = if (list.isEmpty()) 0.0 else (list.sum() 
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    if (list.isEmpty()) return list
     val mid = list.sum() / list.size
     for (i in list.indices) {
         list[i] -= mid
@@ -248,13 +247,13 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val list = convert(n, base)
-    var result = ""
+    val result = mutableListOf<String>()
     val latinStart = 'a'.toInt() - 10
     for (i in list) {
-        if (i < 10) result += i.toString()
-        else result += (latinStart + i).toChar()
+        if (i < 10) result.add(i.toString())
+        else result.add((latinStart + i).toChar().toString())
     }
-    return result
+    return result.joinToString("")
 }
 
 /**
