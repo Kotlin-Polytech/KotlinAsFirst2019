@@ -396,7 +396,8 @@ fun findNextBracket(line: String, pos: Int): Int {
 }
 
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    println(commands)
+    require(canBuildFrom(listOf('-', '+', '<', '>', '[', ']', ' '), commands))
+    require(commands.matches(Regex("""([^\[\]]*(\[.*\S.*])?)*""")))
     val grid = mutableListOf<Int>()
     for (i in 1..cells) {
         grid.add(0)
