@@ -79,6 +79,7 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
     for (word in text) res.add(word)
     return res
 }
+
 /**
  * Простая
  *
@@ -302,8 +303,32 @@ fun hasAnagrams(words: List<String>): Boolean = words.count() > words.map { it.t
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
+fun handLine(friends: Map<String, Set<String>>, friend: String, friendList: MutableSet<String>) {
+    val handshakes = friends[friend] ?: setOf()
+    for (nextFriend in handshakes) {
+        if (nextFriend !in friendList) {
+            friendList.add(nextFriend)
+            handLine(friends, nextFriend, friendList)
+        }
+    }
+    return
+}
 
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    val result = mutableMapOf<String, Set<String>>()
+    val alone = mutableSetOf<String>()
+    for ((friend) in friends) {
+        val friendList = mutableSetOf(friend)
+        handLine(friends, friend, friendList)
+        result[friend] = (friendList - friend).toSet()
+        alone.addAll(friendList - friends.keys)
+    }
+    for (friend in alone) {
+        result[friend] = setOf()
+    }
+    return result.toMap()
+}
+
 /**
  * Сложная
  *
