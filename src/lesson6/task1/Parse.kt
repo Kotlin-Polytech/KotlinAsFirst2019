@@ -396,24 +396,15 @@ fun findNextBracket(line: String, pos: Int): Int {
 }
 
 fun checkBrackets(line: String): Boolean {
-    var countLeft = 0
-    var countRight = 0
     var count = 0
     for (chr in line) {
-        if (chr == ' ') continue
         when (chr) {
-            '[' -> countLeft++
-            ']' -> countRight++
+            '[' -> count++
+            ']' -> count--
         }
-        count++
-        if (countLeft == countRight) {
-            if (count == 2) {
-                return false
-            }
-            count = 0
-        }
+        if (count < 0) return false
     }
-    return countLeft == countRight
+    return count == 0
 }
 
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
