@@ -395,9 +395,30 @@ fun findNextBracket(line: String, pos: Int): Int {
     return -1
 }
 
+fun checkBrackets(line: String): Boolean {
+    var countLeft = 0
+    var countRight = 0
+    var count = 0
+    for (chr in line) {
+        if (chr == ' ') continue
+        when (chr) {
+            '[' -> countLeft++
+            ']' -> countRight++
+        }
+        count++
+        if (countLeft == countRight) {
+            if (count == 2) {
+                return false
+            }
+            count = 0
+        }
+    }
+    return countLeft == countRight
+}
+
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     require(canBuildFrom(listOf('-', '+', '<', '>', '[', ']', ' '), commands))
-    require(commands.matches(Regex("""([^\[\]]*(\[.*\S.*])?)*""")))
+    require(checkBrackets(commands))
     val grid = mutableListOf<Int>()
     for (i in 1..cells) {
         grid.add(0)

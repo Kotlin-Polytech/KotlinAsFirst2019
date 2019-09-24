@@ -302,8 +302,8 @@ fun hasAnagrams(words: List<String>): Boolean = words.count() > words.map { it.t
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
 
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
 /**
  * Сложная
  *
