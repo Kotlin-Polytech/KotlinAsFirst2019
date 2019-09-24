@@ -383,7 +383,7 @@ fun fromRoman(roman: String): Int {
  *
  */
 fun findNextBracket(line: String, pos: Int): Int {
-    var countLeft = 1
+    var countLeft = 0
     var countRight = 0
     for (i in pos until line.length) {
         when (line[i]) {
@@ -394,8 +394,9 @@ fun findNextBracket(line: String, pos: Int): Int {
     }
     return -1
 }
+
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    require(commands.matches(Regex("""([+->< ]*)|(\[[+->< ]+])""")))
+    println(commands)
     val grid = mutableListOf<Int>()
     for (i in 1..cells) {
         grid.add(0)
@@ -411,7 +412,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             '>' -> position++
             '+' -> grid[position]++
             '-' -> grid[position]--
-            '[' -> if (grid[position] == 0) oPosition = findNextBracket(commands, position)
+            '[' -> if (grid[position] == 0) oPosition = findNextBracket(commands, oPosition)
             else order.add(oPosition)
             ']' -> if (grid[position] != 0) oPosition = order.last()
             else order.remove(order.last())
