@@ -173,7 +173,7 @@ fun dateDigitToStr(digital: String): String {
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String) =
-    if (phone.matches(Regex("""([+][0-9])?[0-9 -]*([(][0-9 -]+[)])?[0-9 -]*""")))
+    if (phone.matches(Regex("""([+]\d)?[\d -]*([(][\d -]+[)])?[\d -]*""")))
         phone.filter { it !in listOf(' ', '-', '(', ')') }
     else ""
 
@@ -189,7 +189,7 @@ fun flattenPhoneNumber(phone: String) =
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    if (!jumps.matches(Regex("""(([0-9]+|[-%]) )*([0-9]+|[-%])|([0-9]+|[-%])"""))) {
+    if (!jumps.matches(Regex("""((\d+|[-%]) )*(\d+|[-%])"""))) {
         return -1
     }
     val parts = jumps.split(' ')
@@ -218,7 +218,7 @@ fun bestLongJump(jumps: String): Int {
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    if (!jumps.matches(Regex("""(([0-9]+ [+%-]+ )*([0-9]+ [+%-]+))|([0-9]+ [+%-]+)"""))) {
+    if (!jumps.matches(Regex("""((\d+ [+%-]+ )*(\d+ [+%-]+))"""))) {
         return -1
     }
     val parts = jumps.split(' ')
@@ -242,7 +242,7 @@ fun bestHighJump(jumps: String): Int {
  */
 fun plusMinus(expression: String): Int {
     try {
-        require(expression.matches(Regex("""([0-9]+ [+-] )*[0-9]+""")))
+        require(expression.matches(Regex("""(\d+ [+-] )*\d+""")))
         val parts = expression.split(' ')
         var result = parts[0].toInt()
         for (i in 2 until parts.size step 2) {
