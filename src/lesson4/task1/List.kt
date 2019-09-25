@@ -310,19 +310,30 @@ fun decimalFromString(str: String, base: Int): Int {
  */
 
 fun roman(n: Int): String {
-    val chars = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
-    val values = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
-    var digit = 0
+    val transTable = mapOf(
+        1000 to "M",
+        900 to "CM",
+        500 to "D",
+        400 to "CD",
+        100 to "C",
+        90 to "XC",
+        50 to "L",
+        40 to "XL",
+        10 to "X",
+        9 to "IX",
+        5 to "V",
+        4 to "IV",
+        1 to "I"
+    )
     var num = n
-    var result = ""
-    while (num > 0) {
-        while (num >= values[digit]) {
-            num -= values[digit]
-            result += chars[digit]
+    val result = mutableListOf<String>()
+    for ((arabic, roman) in transTable) {
+        while (num >= arabic) {
+            num -= arabic
+            result.add(roman)
         }
-        digit++
     }
-    return result
+    return result.joinToString("")
 }
 
 /**
