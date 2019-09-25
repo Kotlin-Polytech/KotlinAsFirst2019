@@ -93,17 +93,9 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val names = mutableMapOf<Int, MutableList<String>>()
     for ((name, grade) in grades) {
-        if (grade in names.keys) {
-            names[grade]!!.add(name)
-        } else {
-            names[grade] = mutableListOf(name)
-        }
+        names.getOrPut(grade, { mutableListOf() }).add(name)
     }
-    val result = mutableMapOf<Int, List<String>>()
-    for ((grade, list) in names) {
-        result[grade] = list.toList()
-    }
-    return result.toMap()
+    return names
 }
 
 /**
@@ -179,7 +171,7 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
     for ((name, phoneB) in mapB) {
         if (name !in result.keys) result[name] = phoneB
     }
-    return result.toMap()
+    return result
 }
 
 /**
@@ -203,7 +195,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     for ((name, price) in prices) {
         result[name] = price / count[name]!!
     }
-    return result.toMap()
+    return result
 }
 
 /**
@@ -265,7 +257,7 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
     for (name in list) {
         repeats[name] = (repeats[name] ?: 0) + 1
     }
-    return repeats.filter { it.value > 1 }.toMap()
+    return repeats.filter { it.value > 1 }
 }
 
 /**
@@ -326,7 +318,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     for (friend in alone) {
         result[friend] = setOf()
     }
-    return result.toMap()
+    return result
 }
 
 /**

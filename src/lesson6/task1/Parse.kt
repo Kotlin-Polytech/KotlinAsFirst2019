@@ -433,5 +433,5 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         oPosition++
     }
     check(position in 0 until cells)
-    return grid.toList()
+    return grid
 }
