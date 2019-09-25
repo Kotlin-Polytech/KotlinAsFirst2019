@@ -2,6 +2,9 @@
 
 package lesson5.task1
 
+import kotlin.math.max
+import kotlin.math.min
+
 /**
  * Пример
  *
@@ -345,14 +348,31 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    val len = list.size
-    var summary: Int
-    val sortedList = list.sorted()
-    for (first in 0 until (len - 1)) {
-        for (second in (first + 1) until len) {
-            summary = sortedList[first] + sortedList[second]
-            if (summary == number) return Pair(list.indexOf(sortedList[first]), list.indexOf(sortedList[second]))
-            if (summary > number) break
+    var sortedList = list.sorted()
+    for (i in sortedList.indices) {
+        if (sortedList[i] > number) {
+            sortedList = sortedList.subList(0, i)
+        }
+    }
+    var preValue = -1
+    val resortedList = mutableListOf<Boolean>()
+    for (value in sortedList) {
+        for (i in preValue + 1 until value) {
+            resortedList.add(false)
+        }
+        resortedList.add(true)
+        preValue = value
+    }
+    for (num in sortedList) {
+        val value = number - num
+        if (value < resortedList.size) {
+            if (resortedList[value]) {
+                val index1 = list.indexOf(value)
+                val index2 = list.indexOf(num)
+                if (index1 != index2) {
+                    return Pair(min(index1, index2), max(index1, index2))
+                }
+            }
         }
     }
     return Pair(-1, -1)
