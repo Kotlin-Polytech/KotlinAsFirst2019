@@ -293,6 +293,7 @@ fun hasAnagrams(words: List<String>): Boolean = words.count() > words.map { it.t
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
+
 fun handLine(
     friends: Map<String, Set<String>>,
     friend: String,
