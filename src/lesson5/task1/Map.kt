@@ -215,17 +215,15 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
     var min = Double.MAX_VALUE
-    var minName = ""
-    var trigger = false
+    var minName: String? = null
     for ((name, pair) in stuff) {
         if (pair.first == kind)
             if (pair.second <= min) {
-                trigger = true
                 minName = name
                 min = pair.second
             }
     }
-    return if (trigger) minName else null
+    return minName
 }
 
 /**
@@ -295,12 +293,19 @@ fun hasAnagrams(words: List<String>): Boolean = words.count() > words.map { it.t
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
-fun handLine(friends: Map<String, Set<String>>, friend: String, friendList: MutableSet<String>) {
+fun handLine(
+    friends: Map<String, Set<String>>,
+    friend: String,
+    friendList: MutableSet<String>,
+    result: MutableMap<String, Set<String>>
+) {
     val handshakes = friends[friend] ?: setOf()
     for (nextFriend in handshakes) {
         if (nextFriend !in friendList) {
             friendList.add(nextFriend)
-            handLine(friends, nextFriend, friendList)
+            if (nextFriend in result.keys) {
+                friendList.addAll(result[nextFriend]!!)
+            } else handLine(friends, nextFriend, friendList, result)
         }
     }
     return
@@ -311,7 +316,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     val alone = mutableSetOf<String>()
     for ((friend) in friends) {
         val friendList = mutableSetOf(friend)
-        handLine(friends, friend, friendList)
+        handLine(friends, friend, friendList, result)
         result[friend] = (friendList - friend).toSet()
         alone.addAll(friendList - friends.keys)
     }
