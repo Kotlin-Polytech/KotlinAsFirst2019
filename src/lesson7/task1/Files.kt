@@ -84,7 +84,30 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    File(outputName).bufferedWriter().use {
+        var trigger = false
+        for (i in File(inputName).readText()) {
+            when {
+                trigger -> {
+                    when (i) {
+                        'ы' -> it.write('и'.toInt())
+                        'Ы' -> it.write('И'.toInt())
+                        'я' -> it.write('а'.toInt())
+                        'Я' -> it.write('А'.toInt())
+                        'ю' -> it.write('у'.toInt())
+                        'Ю' -> it.write('У'.toInt())
+                        else -> it.write(i.toInt())
+                    }
+                    trigger = false
+                }
+                i in "ЖжЧчШшЩщ" -> {
+                    trigger = true
+                    it.write(i.toInt())
+                }
+                else -> it.write(i.toInt())
+            }
+        }
+    }
 }
 
 /**
