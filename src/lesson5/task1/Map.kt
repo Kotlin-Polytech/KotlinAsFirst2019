@@ -312,7 +312,6 @@ fun handLine(
             } else handLine(friends, nextFriend, friendList, result)
         }
     }
-    return
 }
 
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
