@@ -87,25 +87,23 @@ fun sibilants(inputName: String, outputName: String) {
     File(outputName).bufferedWriter().use {
         var trigger = false
         for (i in File(inputName).readText()) {
-            when {
-                trigger -> {
-                    when (i) {
-                        'ы' -> it.write('и'.toInt())
-                        'Ы' -> it.write('И'.toInt())
-                        'я' -> it.write('а'.toInt())
-                        'Я' -> it.write('А'.toInt())
-                        'ю' -> it.write('у'.toInt())
-                        'Ю' -> it.write('У'.toInt())
-                        else -> it.write(i.toInt())
-                    }
-                    trigger = false
+            if (trigger) {
+                when (i) {
+                    'ы' -> it.write('и'.toInt())
+                    'Ы' -> it.write('И'.toInt())
+                    'я' -> it.write('а'.toInt())
+                    'Я' -> it.write('А'.toInt())
+                    'ю' -> it.write('у'.toInt())
+                    'Ю' -> it.write('У'.toInt())
+                    else -> it.write(i.toInt())
                 }
-                i in "ЖжЧчШшЩщ" -> {
-                    trigger = true
-                    it.write(i.toInt())
-                }
-                else -> it.write(i.toInt())
+                trigger = i in "ЖжЧчШшЩщ"
+                continue
             }
+            if (i in "ЖжЧчШшЩщ") {
+                trigger = true
+                it.write(i.toInt())
+            } else it.write(i.toInt())
         }
     }
 }
