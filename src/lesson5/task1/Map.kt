@@ -2,6 +2,7 @@
 
 package lesson5.task1
 
+import ru.spbstu.wheels.sorted
 import kotlin.math.max
 import kotlin.math.min
 
@@ -370,9 +371,10 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     }
     for (num in sortedList) {
         val index = number - num
+        if (index <= number / 2) break
         if (index in numbers.indices) {
-            if (numbers[index]) return Pair(list.indexOf(num), list.indexOf(index))
-        } else break
+            if (numbers[index]) return Pair(list.indexOf(num), list.indexOf(index)).sorted()
+        }
     }
     return Pair(-1, -1)
 }
