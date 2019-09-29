@@ -197,10 +197,12 @@ fun linesSplitBySpaces(lines: List<String>): List<List<String>> {
         var symbolIndex = 0
         val words = mutableListOf<String>()
         while (symbolIndex in line.indices) {
-            while (line[symbolIndex] == ' ') symbolIndex++
-            val firstIndex = symbolIndex
-            while (symbolIndex in line.indices && line[symbolIndex] != ' ') symbolIndex++
-            words.add(line.slice(firstIndex until symbolIndex))
+            while (symbolIndex in line.indices && line[symbolIndex] == ' ') symbolIndex++
+            if (symbolIndex < line.length) {
+                val firstIndex = symbolIndex
+                while (symbolIndex in line.indices && line[symbolIndex] != ' ') symbolIndex++
+                words.add(line.slice(firstIndex until symbolIndex))
+            }
         }
         wordsInLines.add(words)
     }
@@ -221,7 +223,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                 continue
             }
             if (words.size == 1) {
-                it.write(words[0])
+                it.write(words.first())
                 it.newLine()
                 continue
             }
