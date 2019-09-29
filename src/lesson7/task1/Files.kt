@@ -206,8 +206,14 @@ fun linesSplitBySpaces(lines: List<String>): List<List<String>> {
     }
     return wordsInLines
 }
+
 fun alignFileByWidth(inputName: String, outputName: String) {
     val wordsInLines = linesSplitBySpaces(File(inputName).readLines())
+    if (wordsInLines.size == 1) {
+        File(outputName).bufferedWriter().use {
+            it.write(wordsInLines.first().joinToString(" "))
+        }
+    }
     var maxLen = 0
     for (words in wordsInLines) {
         val len = words.joinToString("").length + words.size - 1
