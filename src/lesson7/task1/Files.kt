@@ -148,15 +148,6 @@ fun removeRedundantSpaces(inputLines: List<String>): List<String> {
     return outputLines
 }
 
-fun centerWithSpaces(line: String, requiredLen: Int): String {
-    val leftSpaces = (requiredLen - line.length) / 2
-    val spaces = mutableListOf<Char>()
-    for (i in 0 until leftSpaces) {
-        spaces.add(' ')
-    }
-    return spaces.joinToString("") + line
-}
-
 fun centerFile(inputName: String, outputName: String) {
     val lines = removeRedundantSpaces(File(inputName).readLines())
     var maxLen = 0
@@ -167,7 +158,7 @@ fun centerFile(inputName: String, outputName: String) {
     }
     File(outputName).bufferedWriter().use {
         for (line in lines) {
-            it.write(centerWithSpaces(line, maxLen))
+            it.write(" ".repeat((maxLen - line.length) / 2) + line)
             it.newLine()
         }
     }
