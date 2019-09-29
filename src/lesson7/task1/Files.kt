@@ -191,8 +191,59 @@ fun centerFile(inputName: String, outputName: String) {
  * 7) В самой длинной строке каждая пара соседних слов должна быть отделена В ТОЧНОСТИ одним пробелом
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
+fun linesSplitBySpaces(lines: List<String>): List<List<String>> {
+    val wordsInLines = mutableListOf<List<String>>()
+    for (line in lines) {
+        var symbolIndex = 0
+        val words = mutableListOf<String>()
+        while (symbolIndex in line.indices) {
+            while (line[symbolIndex] == ' ') symbolIndex++
+            val firstIndex = symbolIndex
+            while (symbolIndex in line.indices && line[symbolIndex] != ' ') symbolIndex++
+            words.add(line.slice(firstIndex until symbolIndex))
+        }
+        wordsInLines.add(words)
+    }
+    return wordsInLines
+}
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val wordsInLines = linesSplitBySpaces(File(inputName).readLines())
+    var maxLen = 0
+    for (words in wordsInLines) {
+        val len = words.joinToString("").length + words.size - 1
+        if (len > maxLen) maxLen = len
+    }
+    File(outputName).bufferedWriter().use {
+        for (words in wordsInLines) {
+            if (words.isEmpty()) {
+                it.newLine()
+                continue
+            }
+            if (words.size == 1) {
+                it.write(words[0])
+                it.newLine()
+                continue
+            }
+            val spaceCount = maxLen - words.joinToString("").length
+            val minSpacesPerWord = spaceCount / (words.size - 1)
+            if (minSpacesPerWord * (words.size - 1) == spaceCount) {
+                it.write(words.joinToString(" ".repeat(minSpacesPerWord)))
+                it.newLine()
+            } else {
+                val maxSpacesPerWord = minSpacesPerWord + 1
+                var count = 1
+                while (count * maxSpacesPerWord + (words.size - 1 - count) * minSpacesPerWord != spaceCount) count++
+                it.write(
+                    words.slice(
+                        0..count
+                    ).joinToString(" ".repeat(maxSpacesPerWord)) + " ".repeat(minSpacesPerWord) + words.slice(
+                        count + 1 until words.size
+                    ).joinToString(" ".repeat(minSpacesPerWord))
+                )
+                it.newLine()
+            }
+        }
+    }
 }
 
 /**
