@@ -208,13 +208,13 @@ fun linesSplitBySpaces(lines: List<String>): List<List<String>> {
 }
 
 fun alignFileByWidth(inputName: String, outputName: String) {
-    val lines = removeRedundantSpaces(File(inputName).readLines())
+    val wordsInLines = linesSplitBySpaces(File(inputName).readLines())
     var maxLen = 0
-    for (line in lines) {
-        if (line.length > maxLen) maxLen = line.length
+    for (words in wordsInLines) {
+        val len = words.joinToString("").length + words.size - 1
+        if (len > maxLen) maxLen = len
     }
     File(outputName).bufferedWriter().use {
-        val wordsInLines = linesSplitBySpaces(lines)
         for (words in wordsInLines) {
             if (words.isEmpty()) {
                 it.newLine()
