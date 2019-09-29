@@ -125,8 +125,52 @@ fun sibilants(inputName: String, outputName: String) {
  * 4) Число строк в выходном файле должно быть равно числу строк во входном (в т. ч. пустых)
  *
  */
+fun removeRedundantSpaces(inputLines: List<String>): List<String> {
+    val outputLines = mutableListOf<String>()
+    for (line in inputLines) {
+        var firstIndex = 0
+        for (i in line.indices) {
+            if (line[i] != ' ') {
+                firstIndex = i
+                break
+            }
+        }
+        var secondIndex = 0
+        for (i in line.indices.reversed()) {
+            if (line[i] != ' ') {
+                secondIndex = i
+                break
+            }
+        }
+        if (firstIndex < secondIndex) outputLines.add(line.slice(firstIndex..secondIndex))
+        else outputLines.add("")
+    }
+    return outputLines
+}
+
+fun centerWithSpaces(line: String, requiredLen: Int): String {
+    val leftSpaces = (requiredLen - line.length) / 2
+    val spaces = mutableListOf<Char>()
+    for (i in 0 until leftSpaces) {
+        spaces.add(' ')
+    }
+    return spaces.joinToString("") + line
+}
+
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val lines = removeRedundantSpaces(File(inputName).readLines())
+    var maxLen = 0
+    for (line in lines) {
+        if (line.length > maxLen) {
+            maxLen = line.length
+        }
+    }
+    File(outputName).bufferedWriter().use {
+        for (line in lines) {
+            it.write(centerWithSpaces(line, maxLen))
+            it.newLine()
+        }
+    }
 }
 
 /**
