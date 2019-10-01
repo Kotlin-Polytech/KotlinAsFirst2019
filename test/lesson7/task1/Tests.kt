@@ -148,7 +148,6 @@ Basic, Ruby, Swift.
     @Test
     @Tag("Normal")
     fun top20Words() {
-        assertEquals(mapOf<String, Int>(), top20Words("input/empty.txt"))
         assertEquals(mapOf(
             "привет" to 4,
             "все" to 3,
@@ -185,6 +184,7 @@ Basic, Ruby, Swift.
                 "уж" to 95
             ), top20Words("input/onegin.txt")
         )
+        assertEquals(mapOf<String, Int>(), top20Words("input/empty.txt"))
     }
 
     @Test
