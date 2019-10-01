@@ -70,6 +70,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     }
     return result
 }
+
 /**
  * Средняя
  *
@@ -309,7 +310,23 @@ fun top20Words(inputName: String): Map<String, Int> {
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    TODO()
+    val text = File(inputName).readText()
+    val lowDictionary = mutableMapOf<Char, String>()
+    for ((chr, str) in dictionary) {
+        lowDictionary[chr.toLowerCase()] = str.toLowerCase()
+    }
+    val keySet = lowDictionary.keys.toSet()
+    File(outputName).bufferedWriter().use {
+        for (chr in text) {
+            val lowChar = chr.toLowerCase()
+            if (lowChar in keySet) {
+                val replacement = lowDictionary[lowChar]!!
+                if (chr.isUpperCase()) {
+                    it.write(replacement.first().toUpperCase() + replacement.slice(1 until replacement.length))
+                } else it.write(replacement)
+            } else it.write(chr.toString())
+        }
+    }
 }
 
 /**
