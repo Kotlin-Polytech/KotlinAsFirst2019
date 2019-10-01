@@ -175,7 +175,7 @@ fun dateDigitToStr(digital: String): String {
 fun flattenPhoneNumber(phone: String): String {
     val clearPhone = phone.filter { it != ' ' }
     return if (clearPhone.matches(Regex("""(\+\d)?(\d|((?<=\d)-+(?=\d)))*(\((\d|((?<=\d)-+(?=\d)))+\))?(\d|((?<=\d)-+(?=\d)))*""")))
-        clearPhone.filter { it !in listOf(' ', '-', '(', ')') }
+        clearPhone.filter { it !in listOf('-', '(', ')') }
     else ""
 }
 
