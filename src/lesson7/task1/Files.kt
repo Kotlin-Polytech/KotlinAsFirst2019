@@ -321,9 +321,11 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
             val lowChar = chr.toLowerCase()
             if (lowChar in keySet) {
                 val replacement = lowDictionary[lowChar]!!
-                if (chr.isUpperCase()) {
-                    it.write(replacement.first().toUpperCase() + replacement.slice(1 until replacement.length))
-                } else it.write(replacement)
+                if (replacement.isNotEmpty()) {
+                    if (chr.isUpperCase()) {
+                        it.write(replacement.first().toUpperCase() + replacement.slice(1 until replacement.length))
+                    } else it.write(replacement)
+                }
             } else it.write(chr.toString())
         }
     }
