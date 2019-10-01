@@ -191,26 +191,9 @@ fun centerFile(inputName: String, outputName: String) {
  * 7) В самой длинной строке каждая пара соседних слов должна быть отделена В ТОЧНОСТИ одним пробелом
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
-fun linesSplitBySpaces(lines: List<String>): List<List<String>> {
-    val wordsInLines = mutableListOf<List<String>>()
-    for (line in lines) {
-        var symbolIndex = 0
-        val words = mutableListOf<String>()
-        while (symbolIndex in line.indices) {
-            while (symbolIndex in line.indices && line[symbolIndex] == ' ') symbolIndex++
-            if (symbolIndex < line.length) {
-                val firstIndex = symbolIndex
-                while (symbolIndex in line.indices && line[symbolIndex] != ' ') symbolIndex++
-                words.add(line.slice(firstIndex until symbolIndex))
-            }
-        }
-        wordsInLines.add(words)
-    }
-    return wordsInLines
-}
 
 fun alignFileByWidth(inputName: String, outputName: String) {
-    val wordsInLines = linesSplitBySpaces(File(inputName).readLines())
+    val wordsInLines = removeRedundantSpaces(File(inputName).readLines()).map { it.split(Regex("""[ ]+""")) }
     var maxLen = 0
     for (words in wordsInLines) {
         val len = words.joinToString("").length + words.size - 1
