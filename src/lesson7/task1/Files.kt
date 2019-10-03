@@ -85,26 +85,17 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
+    val replacement = mapOf('ы' to 'и', 'Ы' to 'И', 'я' to 'а', 'Я' to 'А', 'ю' to 'у', 'Ю' to 'У')
     File(outputName).bufferedWriter().use {
         var trigger = false
         for (i in File(inputName).readText()) {
-            if (trigger) {
-                when (i) {
-                    'ы' -> it.write('и'.toInt())
-                    'Ы' -> it.write('И'.toInt())
-                    'я' -> it.write('а'.toInt())
-                    'Я' -> it.write('А'.toInt())
-                    'ю' -> it.write('у'.toInt())
-                    'Ю' -> it.write('У'.toInt())
-                    else -> it.write(i.toInt())
-                }
+            if (trigger && i in replacement.keys) {
+                it.write(replacement[i].toString())
+                trigger = false
+            } else {
+                it.write(i.toString())
                 trigger = i in "ЖжЧчШшЩщ"
-                continue
             }
-            if (i in "ЖжЧчШшЩщ") {
-                trigger = true
-                it.write(i.toInt())
-            } else it.write(i.toInt())
         }
     }
 }
@@ -315,7 +306,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
     for ((chr, str) in dictionary) {
         lowDictionary[chr.toLowerCase()] = str.toLowerCase()
     }
-    val keySet = lowDictionary.keys.toSet()
+    val keySet = lowDictionary.keys
     File(outputName).bufferedWriter().use {
         for (chr in text) {
             val lowChar = chr.toLowerCase()
