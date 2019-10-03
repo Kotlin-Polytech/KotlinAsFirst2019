@@ -4,9 +4,6 @@ package lesson6.task1
 
 import lesson2.task2.daysInMonth
 import lesson5.task1.canBuildFrom
-import java.lang.IllegalArgumentException
-import java.lang.IndexOutOfBoundsException
-import java.lang.NumberFormatException
 
 /**
  * Пример
@@ -91,25 +88,24 @@ fun dateStrToDigit(str: String): String {
         "ноября",
         "декабря"
     )
-    try {
-        val parts = str.split(" ")
-        if (parts.size != 3) {
-            return ""
-        }
-        val day = parts[0].toInt()
-        val month = parts[1]
-        val year = parts[2].toInt()
-        val monthNum = months.indexOf(month)
-        if (monthNum == -1) {
-            return ""
-        }
-        if ((day < 1) || (day > daysInMonth(monthNum, year))) {
-            return ""
-        }
-        return String.format("%02d.%02d.%d", day, monthNum, year)
-    } catch (e: NumberFormatException) {
+    val parts = str.split(" ")
+    if (parts.size != 3) {
         return ""
     }
+    val day = parts[0].toIntOrNull()
+    val month = parts[1]
+    val year = parts[2].toIntOrNull()
+    if (day == null || year == null) {
+        return ""
+    }
+    val monthNum = months.indexOf(month)
+    if (monthNum == -1) {
+        return ""
+    }
+    if ((day < 1) || (day > daysInMonth(monthNum, year))) {
+        return ""
+    }
+    return String.format("%02d.%02d.%d", day, monthNum, year)
 }
 
 /**
@@ -138,24 +134,23 @@ fun dateDigitToStr(digital: String): String {
         "ноября",
         "декабря"
     )
-    try {
-        val parts = digital.split(".")
-        if (parts.size != 3) {
-            return ""
-        }
-        val day = parts[0].toInt()
-        val month = parts[1].toInt()
-        val year = parts[2].toInt()
-        if (month !in 1..12) {
-            return ""
-        }
-        if (day > daysInMonth(month, year)) {
-            return ""
-        }
-        return String.format("%d %s %d", day, months[month], year)
-    } catch (e: NumberFormatException) {
+    val parts = digital.split(".")
+    if (parts.size != 3) {
         return ""
     }
+    val day = parts[0].toIntOrNull()
+    val month = parts[1].toIntOrNull()
+    val year = parts[2].toIntOrNull()
+    if (day == null || month == null || year == null) {
+        return ""
+    }
+    if (month !in 1..12) {
+        return ""
+    }
+    if (day > daysInMonth(month, year)) {
+        return ""
+    }
+    return String.format("%d %s %d", day, months[month], year)
 }
 
 /**
@@ -174,7 +169,14 @@ fun dateDigitToStr(digital: String): String {
  */
 fun flattenPhoneNumber(phone: String): String {
     val clearPhone = phone.filter { it != ' ' }
-    return if (clearPhone.matches(Regex("""(\+\d)?(\d|((?<=\d)-+(?=\d)))*(\((\d|((?<=\d)-+(?=\d)))+\))?(\d|((?<=\d)-+(?=\d)))*""")))
+    val plusAndDigit = """(\+\d)?"""
+    val minusOrDigit = """(\d|((?<=\d)-+(?=\d)))"""
+    val brackets = '(' + """\(""" + minusOrDigit + '+' + """\)""" + ')' + '?'
+    val pattern = plusAndDigit + minusOrDigit + '*' + brackets + minusOrDigit + '+'
+    return if (clearPhone.matches(
+            Regex(pattern)
+        )
+    )
         clearPhone.filter { it !in listOf('-', '(', ')') }
     else ""
 }
@@ -197,12 +199,9 @@ fun bestLongJump(jumps: String): Int {
     val parts = jumps.split(' ')
     var max = -1
     for (elem in parts) {
-        try {
-            if (elem.toInt() > max) {
-                max = elem.toInt()
-            }
-        } catch (e: NumberFormatException) {
-            continue
+        val height = elem.toIntOrNull()
+        if (height != null && height > max) {
+            max = height
         }
     }
     return max
@@ -243,20 +242,17 @@ fun bestHighJump(jumps: String): Int {
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    try {
-        require(expression.matches(Regex("""(\d+ [+-] )*\d+""")))
-        val parts = expression.split(' ')
-        var result = parts[0].toInt()
-        for (i in 2 until parts.size step 2) {
-            if (parts[i - 1] == "+") {
-                result += parts[i].toInt()
-            } else {
-                result -= parts[i].toInt()
-            }
+    require(expression.matches(Regex("""(\d+ [+-] )*\d+""")))
+    val parts = expression.split(' ')
+    var result = parts[0].toInt()
+    for (i in 2 until parts.size step 2) {
+        if (parts[i - 1] == "+") {
+            result += parts[i].toInt()
+        } else {
+            result -= parts[i].toInt()
         }
-        return result
-    } finally {
     }
+    return result
 }
 
 /**
@@ -294,7 +290,7 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше либо равны нуля.
  */
 fun mostExpensive(description: String): String {
-    if (description.isEmpty()) {
+    if (!description.toLowerCase().matches(Regex("""(([ёа-яa-z]+ \d*.?\d+; )*([ёа-яa-z]+ \d*.?\d+))"""))) {
         return ""
     }
     val parts = description.split("; ")
@@ -326,7 +322,7 @@ fun mostExpensive(description: String): String {
  */
 fun fromRoman(roman: String): Int {
     if (roman.isEmpty()) return -1
-    if (!roman.matches(Regex("""M*(CM)?D{0,4}(CD)?C{0,4}(XC)?L{0,4}(XL)?X{0,4}(IX)?V{0,4}(IV)?I{0,4}"""))) {
+    if (!roman.matches(Regex("""M*(CM)?D{0,3}(CD)?C{0,3}(XC)?L{0,3}(XL)?X{0,3}(IX)?V{0,3}(IV)?I{0,3}"""))) {
         return -1
     }
     val romans = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
