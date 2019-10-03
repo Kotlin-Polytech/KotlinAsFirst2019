@@ -130,7 +130,7 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    val limit = ceil(sqrt(n.toDouble())).toInt()
+    val limit = sqrt(n.toDouble()).toInt()
     for (i in 2..limit) {
         if (n % i == 0) return i
     }
@@ -272,15 +272,7 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean {
-    var reversedNum = 0
-    var copyNum = n
-    while (copyNum > 0) {
-        reversedNum = reversedNum * 10 + copyNum % 10
-        copyNum /= 10
-    }
-    return reversedNum == n
-}
+fun isPalindrome(n: Int): Boolean = n == revert(n)
 
 /**
  * Средняя
@@ -329,7 +321,7 @@ fun findDigit(n: Int, funParam: Int, firstElem: Int, nextElem: (Int, Int, Int) -
 }
 
 fun squareSequenceDigit(n: Int) =
-    findDigit(n, 2, 1) { _, _, param -> Pair(sqr(param), param + 1)}
+    findDigit(n, 2, 1) { _, _, param -> Pair(sqr(param), param + 1) }
 
 /**
  * Сложная
@@ -341,4 +333,4 @@ fun squareSequenceDigit(n: Int) =
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun fibSequenceDigit(n: Int) =
-    findDigit(n, 0, 1) { _, currentNum, param -> Pair(currentNum + param, currentNum)}
+    findDigit(n, 0, 1) { _, currentNum, param -> Pair(currentNum + param, currentNum) }
