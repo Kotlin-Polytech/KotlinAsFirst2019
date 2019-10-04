@@ -416,14 +416,18 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 while (index < line.length) {
                     when (line[index]) {
                         '~' -> {
-                            if (stack.isNotEmpty() && 's' == stack.last()) {
-                                it.write("</s>")
-                                stack.removeAt(stack.lastIndex)
+                            if (index + 1 < line.length && line[index + 1] == '~') {
+                                if (stack.isNotEmpty() && 's' == stack.last()) {
+                                    it.write("</s>")
+                                    stack.removeAt(stack.lastIndex)
+                                } else {
+                                    it.write("<s>")
+                                    stack.add('s')
+                                }
+                                index++
                             } else {
-                                it.write("<s>")
-                                stack.add('s')
+                                it.write(line[index].toString())
                             }
-                            index++
                         }
                         '*' -> {
                             if (index + 1 < line.length && line[index + 1] == '*') {
