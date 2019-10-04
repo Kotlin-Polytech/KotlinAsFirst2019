@@ -426,11 +426,24 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                         }
                         '*' -> {
                             if (index + 1 < line.length && line[index + 1] == '*') {
-                                if (index + 2 < line.length && line[index + 2] == '*' && 'i' !in stack && 'b' !in stack) {
-                                    it.write("<b><i>")
-                                    stack.add('b')
-                                    stack.add('i')
-                                    index += 2
+                                if (index + 2 < line.length && line[index + 2] == '*') {
+                                    when (stack.last()) {
+                                        'i' -> {
+                                            it.write("</i>")
+                                            stack.removeAt(stack.lastIndex)
+                                        }
+                                        'b' -> {
+                                            it.write("</b>")
+                                            stack.removeAt(stack.lastIndex)
+                                            index++
+                                        }
+                                        else -> {
+                                            it.write("<b><i>")
+                                            stack.add('b')
+                                            stack.add('i')
+                                            index += 2
+                                        }
+                                    }
                                 } else {
                                     if (stack.isNotEmpty() && 'b' == stack.last()) {
                                         it.write("</b>")
