@@ -403,14 +403,15 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     File(outputName).bufferedWriter().use {
         it.write("<html>\n<body>\n<p>")
         var trigger = true
+        val stack = mutableListOf<Char>()
         for (line in lines) {
-            val stack = mutableListOf<Char>()
             if (line.isEmpty()) {
                 if (trigger) {
                     it.write("</p>\n<p>")
                     trigger = false
                 }
             } else {
+                it.newLine()
                 var index = 0
                 while (index < line.length) {
                     when (line[index]) {
