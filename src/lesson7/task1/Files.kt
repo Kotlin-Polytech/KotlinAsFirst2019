@@ -2,6 +2,7 @@
 
 package lesson7.task1
 
+import lesson3.task1.digitNumber
 import java.io.File
 
 /**
@@ -543,7 +544,32 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+
+    val result = lhv * rhv
+    val len = digitNumber(result) + 1
+    val lines = mutableListOf<String>()
+
+    lines.add(" ".repeat(len - digitNumber(lhv)) + lhv.toString())
+    lines.add('*' + " ".repeat(len - digitNumber(rhv) - 1) + rhv.toString())
+    lines.add("-".repeat(len))
+
+    var num = rhv
+    var multipy = num % 10 * lhv
+    num /= 10
+    lines.add(" ".repeat(len - digitNumber(multipy)) + multipy.toString())
+
+    var spaces = 2
+    while (num > 0) {
+        multipy = num % 10 * lhv
+        num /= 10
+        lines.add('+' + " ".repeat(len - digitNumber(multipy) - spaces) + multipy.toString())
+        spaces++
+    }
+
+    lines.add("-".repeat(len))
+    lines.add(" $result")
+
+    File(outputName).writeText(lines.joinToString("\n"))
 }
 
 
