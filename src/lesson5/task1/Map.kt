@@ -359,21 +359,23 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
             }
         }
     }
-    val numbers = mutableListOf<Boolean>()
+
+    val isNumberInList = arrayOfNulls<Boolean>(number)
     var preNum = -1
     val sortedList = list.toSet().toList().sorted()
     for (num in sortedList) {
         for (i in preNum + 1 until num) {
-            numbers.add(false)
+            isNumberInList[i] = false
         }
         preNum = num
-        numbers.add(true)
+        isNumberInList[num] = true
     }
+
     for (num in sortedList) {
         val index = number - num
         if (index <= number / 2) break
-        if (index in numbers.indices) {
-            if (numbers[index]) return Pair(list.indexOf(num), list.indexOf(index)).sorted()
+        if (index in isNumberInList.indices) {
+            if (isNumberInList[index] == true) return Pair(list.indexOf(num), list.indexOf(index)).sorted()
         }
     }
     return Pair(-1, -1)
