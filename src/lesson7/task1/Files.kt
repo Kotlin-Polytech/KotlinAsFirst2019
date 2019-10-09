@@ -5,6 +5,7 @@ package lesson7.task1
 import lesson3.task1.digitNumber
 import lesson3.task1.revert
 import java.io.File
+import kotlin.math.max
 
 /**
  * Пример
@@ -595,6 +596,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
+
     var currentNum = 0
     var reversed = revert(lhv)
     val steps = mutableListOf<Int>()
@@ -605,9 +607,44 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         steps.add(currentNum - currentNum % rhv)
         currentNum %= rhv
     }
-    val pairs = steps.chunked(2).drop(steps.chunked(2).indexOfFirst { it[1] != 0 })
+
+    val pairs = if (steps.chunked(2).any { it[1] != 0 }) {
+        steps.chunked(2).drop(steps.chunked(2).indexOfFirst { it[1] != 0 })
+    } else listOf(steps)
+
     File(outputName).bufferedWriter().use {
 
+        it.write(" $lhv | $rhv\n")
+
+        var len = digitNumber(pairs[0][1]) + 1
+        it.write('-' + pairs[0][1].toString() + " ".repeat(digitNumber(lhv) + 4 - len) + lhv / rhv)
+        it.newLine()
+
+        it.write("-".repeat(len))
+        it.newLine()
+
+        var isModZero = pairs[0][0] == pairs[0][1]
+        var defaultSpaces = len
+        if (pairs.isNotEmpty()) {
+            for (pair in pairs.drop(1)) {
+
+                defaultSpaces++
+                if (isModZero) it.write(" ".repeat(defaultSpaces - digitNumber(pair[0]) - 1) + '0' + pair[0].toString())
+                else it.write(" ".repeat(defaultSpaces - digitNumber(pair[0])) + pair[0].toString())
+                it.newLine()
+
+                len = digitNumber(pair[1]) + 1
+                it.write(" ".repeat(defaultSpaces - len) + '-' + pair[1].toString())
+                it.newLine()
+
+                it.write(" ".repeat(defaultSpaces - len) + "-".repeat(len))
+                it.newLine()
+
+                isModZero = pair[0] == pair[1]
+            }
+            val mod = lhv % rhv
+            it.write(" ".repeat(defaultSpaces - 1) + mod.toString())
+        }
     }
 }
 
