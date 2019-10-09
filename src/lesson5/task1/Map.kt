@@ -359,7 +359,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
             }
         }
     }
-
+    
     val isNumberInList = arrayOfNulls<Boolean>(number)
     var preNum = -1
     val sortedList = list.toSet().toList().sorted()

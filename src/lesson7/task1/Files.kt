@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import lesson3.task1.digitNumber
+import lesson3.task1.revert
 import java.io.File
 
 /**
@@ -594,6 +595,19 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    var currentNum = 0
+    var reversed = revert(lhv)
+    val steps = mutableListOf<Int>()
+    while (reversed > 0) {
+        currentNum = 10 * currentNum + reversed % 10
+        reversed /= 10
+        steps.add(currentNum)
+        steps.add(currentNum - currentNum % rhv)
+        currentNum %= rhv
+    }
+    val pairs = steps.chunked(2).drop(steps.chunked(2).indexOfFirst { it[1] != 0 })
+    File(outputName).bufferedWriter().use {
+
+    }
 }
 
