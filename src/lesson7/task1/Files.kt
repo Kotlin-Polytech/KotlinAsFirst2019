@@ -402,7 +402,57 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+
+    val len = mapOf('i' to 1, 'b' to 2, 's' to 2)
+    val prefixes = setOf('*', '~')
+
+    fun isTag(line: String, index: Int, stack: MutableList<Char>) =
+        when {
+            line.indexOf("~~", index) == index -> 's'
+            line.indexOf("**", index) == index -> 'b'
+            line[index] == '*' -> 'i'
+            else -> null
+        }
+
+    File(outputName).bufferedWriter().use {
+        var newLine = true
+        it.write("<html><body><p>")
+        for (line in File(inputName).readLines()) {
+            if (line.isEmpty() && newLine) {
+                newLine = false
+                it.write("</p><p>")
+            } else {
+                val stack = mutableListOf<Char>()
+                newLine = true
+                var index = 0
+                while (index < line.length) {
+                    if (line[index] !in prefixes) {
+                        it.write(line[index].toString())
+                        index++
+                    } else {
+                        val tag = isTag(line, index, stack)
+                        when (tag) {
+                            null -> {
+                                it.write(line[index].toString())
+                                index++
+                            }
+                            in stack -> {
+                                it.write("</$tag>")
+                                stack.remove(tag)
+                                index += len[tag] ?: 1
+                            }
+                            else -> {
+                                it.write("<$tag>")
+                                stack.add(tag)
+                                index += len[tag] ?: 1
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        it.write("</p></body></html>")
+    }
 }
 
 /**
