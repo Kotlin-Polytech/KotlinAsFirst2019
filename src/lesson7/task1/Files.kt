@@ -633,7 +633,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             it.newLine()
 
             len = maxOf(digitNumber(pair[1]) + 1, digitNumber(pair[0]))
-            it.write(" ".repeat(defaultSpaces - len) + '-' + pair[1].toString())
+            it.write(" ".repeat(defaultSpaces - digitNumber(pair[1]) - 1) + '-' + pair[1].toString())
             it.newLine()
 
             it.write(" ".repeat(defaultSpaces - len) + "-".repeat(len))
