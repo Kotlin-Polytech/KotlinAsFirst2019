@@ -404,7 +404,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val inputLines = File(inputName).readLines()
     val len = mapOf('s' to 2, 'b' to 2, 'i' to 1)
-
+    val convert = mapOf('s' to "~~", 'b' to "**", 'i' to "*")
     fun isTag(line: String, i: Int) =
         when {
             line[i] == '*' && i + 1 < line.length && line[i + 1] == '*' -> 'b'
@@ -412,34 +412,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             line[i] == '*' -> 'i'
             else -> null
         }
-
-    fun isValidTag(line: String, i: Int, wantedTag: Char): Boolean {
-        var index = i + len[wantedTag]!!
-        val stack = mutableListOf<Char>()
-        while (index < line.length) {
-            val tag = isTag(line, index)
-            when (tag) {
-                null -> {
-                    index++
-                }
-                wantedTag -> return stack.isEmpty()
-                stack.lastOrNull() -> {
-                    stack.remove(tag)
-                    index += len[tag] ?: 1
-                }
-                else -> {
-                    if (isValidTag(line, index, tag)) {
-                        stack.add(tag)
-                        index += len[tag] ?: 1
-                    } else {
-                        index++
-                    }
-                }
-            }
-        }
-        return false
-    }
-
     File(outputName).bufferedWriter().use {
         it.write("<html><body>")
         var trigger = false
@@ -464,16 +436,34 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                         stack.lastOrNull() -> {
                             it.write("</$tag>")
                             stack.remove(tag)
-                            index += len[tag] ?: 1
+                            index += len[tag]!!
                         }
                         else -> {
-                            if (isValidTag(line, index, tag)) {
-                                it.write("<$tag>")
-                                stack.add(tag)
-                                index += len[tag] ?: 1
-                            } else {
-                                it.write(line[index].toString())
-                                index++
+                            val nextTag = line.indexOf(convert[tag]!!, index + len[tag]!!)
+                            val upperTag = if (stack.isNotEmpty()) line.indexOf(
+                                convert[stack.last()]!!,
+                                index + len[tag]!!
+                            ) else -1
+                            when {
+                                nextTag == -1 -> {
+                                    it.write(line[index].toString())
+                                    index++
+                                }
+                                upperTag == -1 || stack.isEmpty() || nextTag < upperTag -> {
+                                    it.write("<$tag>")
+                                    stack.add(tag)
+                                    index += len[tag]!!
+                                }
+                                else -> {
+                                    if (line.indexOf(convert[stack.last()]!!, index + len[tag]!!) != -1) {
+                                        it.write("<$tag>")
+                                        stack.add(tag)
+                                        index += len[tag]!!
+                                    } else {
+                                        it.write(line[index].toString())
+                                        index++
+                                    }
+                                }
                             }
                         }
                     }
