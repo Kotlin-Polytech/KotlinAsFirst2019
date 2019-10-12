@@ -454,7 +454,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                     stack.add(tag)
                                     index += len[tag]!!
                                 }
-                                else -> {
+                                nextTag == upperTag -> {
                                     if (line.indexOf(convert[stack.last()]!!, index + len[tag]!!) != -1) {
                                         it.write("<$tag>")
                                         stack.add(tag)
@@ -463,6 +463,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                         it.write(line[index].toString())
                                         index++
                                     }
+                                }
+                                else -> {
+                                    it.write(line[index].toString())
+                                    index++
                                 }
                             }
                         }
