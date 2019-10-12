@@ -406,13 +406,35 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val len = mapOf('i' to 1, 'b' to 2, 's' to 2)
     val prefixes = setOf('*', '~')
 
-    fun isTag(line: String, index: Int, stack: MutableList<Char>) =
-        when {
-            line.indexOf("~~", index) == index -> 's'
-            line.indexOf("**", index) == index -> 'b'
-            line[index] == '*' -> 'i'
+    fun isTag(line: String, index: Int) =
+        when (line[index]) {
+            '~' -> if (index + 1 < line.length && line[index + 1] == '~') 's' else null
+            '*' -> if (index + 1 < line.length && line[index + 1] == '*') 'b' else 'i'
             else -> null
         }
+
+    fun isValidTag(line: String, index: Int, wantedTag: Char): Boolean {
+        var i = index + len[wantedTag]!!
+        val stack = mutableListOf<Char>()
+        while (i < line.length) {
+            val tag = isTag(line, index)
+            when (tag) {
+                null -> i++
+                wantedTag -> return stack.isEmpty()
+                in stack -> {
+                    stack.remove(tag)
+                    i += len[tag] ?: 1
+                }
+                else -> {
+                    if (isValidTag(line, index, tag)) {
+                        stack.add(tag)
+                        i += len[tag] ?: 1
+                    } else i++
+                }
+            }
+        }
+        return false
+    }
 
     File(outputName).bufferedWriter().use {
         var newLine = true
@@ -430,7 +452,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                         it.write(line[index].toString())
                         index++
                     } else {
-                        val tag = isTag(line, index, stack)
+                        val tag = isTag(line, index)
                         when (tag) {
                             null -> {
                                 it.write(line[index].toString())
@@ -442,9 +464,14 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                 index += len[tag] ?: 1
                             }
                             else -> {
-                                it.write("<$tag>")
-                                stack.add(tag)
-                                index += len[tag] ?: 1
+                                if (isValidTag(line, index, tag)) {
+                                    it.write("<$tag>")
+                                    stack.add(tag)
+                                    index += len[tag] ?: 1
+                                } else {
+                                    it.write(line[index].toString())
+                                    index++
+                                }
                             }
                         }
                     }
