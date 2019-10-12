@@ -692,7 +692,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
     val pairs = if (steps.chunked(2).any { it[1] != 0 }) {
         steps.chunked(2).drop(steps.chunked(2).indexOfFirst { it[1] != 0 })
-    } else listOf(steps)
+    } else listOf(listOf(lhv, 0))
 
     File(outputName).bufferedWriter().use {
 
@@ -706,26 +706,24 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
         var isModZero = pairs[0][0] == pairs[0][1]
         var defaultSpaces = len
-        if (pairs.isNotEmpty()) {
-            for (pair in pairs.drop(1)) {
+        for (pair in pairs.drop(1)) {
 
-                defaultSpaces++
-                if (isModZero) it.write(" ".repeat(defaultSpaces - digitNumber(pair[0]) - 1) + '0' + pair[0].toString())
-                else it.write(" ".repeat(defaultSpaces - digitNumber(pair[0])) + pair[0].toString())
-                it.newLine()
+            defaultSpaces++
+            if (isModZero) it.write(" ".repeat(defaultSpaces - digitNumber(pair[0]) - 1) + '0' + pair[0].toString())
+            else it.write(" ".repeat(defaultSpaces - digitNumber(pair[0])) + pair[0].toString())
+            it.newLine()
 
-                len = digitNumber(pair[1]) + 1
-                it.write(" ".repeat(defaultSpaces - len) + '-' + pair[1].toString())
-                it.newLine()
+            len = digitNumber(pair[1]) + 1
+            it.write(" ".repeat(defaultSpaces - len) + '-' + pair[1].toString())
+            it.newLine()
 
-                it.write(" ".repeat(defaultSpaces - len) + "-".repeat(len))
-                it.newLine()
+            it.write(" ".repeat(defaultSpaces - len) + "-".repeat(len))
+            it.newLine()
 
-                isModZero = pair[0] == pair[1]
-            }
-            val mod = lhv % rhv
-            it.write(" ".repeat(defaultSpaces - 1) + mod.toString())
+            isModZero = pair[0] == pair[1]
         }
+        val mod = lhv % rhv
+        it.write(" ".repeat(defaultSpaces - digitNumber(mod)) + mod.toString())
     }
 }
 
