@@ -504,6 +504,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+
 fun markdownToHtmlLists(inputName: String, outputName: String) {
     TODO()
 }
@@ -600,7 +601,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     var currentNum = 0
     var reversed = revert(lhv)
     val steps = mutableListOf<Int>()
-    while (reversed > 0) {
+    for (i in 0 until digitNumber(lhv)) {
         currentNum = 10 * currentNum + reversed % 10
         reversed /= 10
         steps.add(currentNum)
