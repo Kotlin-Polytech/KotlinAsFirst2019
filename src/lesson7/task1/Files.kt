@@ -413,6 +413,33 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             else -> null
         }
 
+    fun isValidTag(line: String, i: Int, wantedTag: Char): Boolean {
+        var index = i + len[wantedTag]!!
+        val stack = mutableListOf<Char>()
+        while (index < line.length) {
+            val tag = isTag(line, index)
+            when (tag) {
+                null -> {
+                    index++
+                }
+                wantedTag -> return stack.isEmpty()
+                stack.lastOrNull() -> {
+                    stack.remove(tag)
+                    index += len[tag] ?: 1
+                }
+                else -> {
+                    if (isValidTag(line, index, tag)) {
+                        stack.add(tag)
+                        index += len[tag] ?: 1
+                    } else {
+                        index++
+                    }
+                }
+            }
+        }
+        return false
+    }
+
     File(outputName).bufferedWriter().use {
         it.write("<html><body>")
         var trigger = false
@@ -440,9 +467,14 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                             index += len[tag] ?: 1
                         }
                         else -> {
-                            it.write("<$tag>")
-                            stack.add(tag)
-                            index += len[tag] ?: 1
+                            if (isValidTag(line, index, tag)) {
+                                it.write("<$tag>")
+                                stack.add(tag)
+                                index += len[tag] ?: 1
+                            } else {
+                                it.write(line[index].toString())
+                                index++
+                            }
                         }
                     }
                 }
