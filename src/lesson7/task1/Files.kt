@@ -304,7 +304,7 @@ fun top20Words(inputName: String): Map<String, Int> {
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    val text = File(inputName).readText()
+    val text = File(inputName).readLines().joinToString("\n")
     val lowDictionary = mutableMapOf<Char, String>()
     for ((chr, str) in dictionary) {
         lowDictionary[chr.toLowerCase()] = str.toLowerCase()
@@ -437,15 +437,20 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     }
 
     File(outputName).bufferedWriter().use {
-        var newLine = true
-        it.write("<html><body><p>")
+        var trigger = false
+        it.write("<html><body>")
         for (line in File(inputName).readLines()) {
-            if (line.isEmpty() && newLine) {
-                newLine = false
-                it.write("</p><p>")
+            if (line.isEmpty()) {
+                if (trigger) {
+                    it.write("</p>")
+                    trigger = false
+                }
             } else {
+                if (!trigger) {
+                    it.write("<p>")
+                    trigger = true
+                }
                 val stack = mutableListOf<Char>()
-                newLine = true
                 var index = 0
                 while (index < line.length) {
                     if (line[index] !in prefixes) {
@@ -691,12 +696,11 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
     File(outputName).bufferedWriter().use {
 
-        it.write(" $lhv | $rhv\n")
-
+        val diff = if (digitNumber(pairs[0][0]) > digitNumber(pairs[0][1])) 1 else 0
+        it.write(" ".repeat(1 - diff) + "$lhv | $rhv\n")
         var len = digitNumber(pairs[0][1]) + 1
-        it.write('-' + pairs[0][1].toString() + " ".repeat(digitNumber(lhv) + 4 - len) + lhv / rhv)
+        it.write('-' + pairs[0][1].toString() + " ".repeat(digitNumber(lhv) + 4 - len - diff) + lhv / rhv)
         it.newLine()
-
         it.write("-".repeat(len))
         it.newLine()
 

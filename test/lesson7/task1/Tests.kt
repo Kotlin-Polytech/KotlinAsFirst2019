@@ -427,6 +427,12 @@ Basic, Ruby, Swift.
              """
         )
 
+        test(
+            16,
+            9,
+            "16 | 9\n-9   1\n--\n 7"
+        )
+
         File("temp.txt").delete()
     }
 }

@@ -4,6 +4,7 @@ package lesson6.task1
 
 import lesson2.task2.daysInMonth
 import lesson5.task1.canBuildFrom
+import java.lang.NumberFormatException
 
 /**
  * Пример
@@ -73,39 +74,43 @@ fun main() {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String {
-    val months = listOf(
-        "",
-        "января",
-        "февраля",
-        "марта",
-        "апреля",
-        "мая",
-        "июня",
-        "июля",
-        "августа",
-        "сентября",
-        "октября",
-        "ноября",
-        "декабря"
-    )
-    val parts = str.split(" ")
-    if (parts.size != 3) {
+    try {
+        val months = listOf(
+            "",
+            "января",
+            "февраля",
+            "марта",
+            "апреля",
+            "мая",
+            "июня",
+            "июля",
+            "августа",
+            "сентября",
+            "октября",
+            "ноября",
+            "декабря"
+        )
+        val parts = str.split(" ")
+        if (parts.size != 3) {
+            return ""
+        }
+        val day = parts[0].toIntOrNull()
+        val month = parts[1]
+        val year = parts[2].toIntOrNull()
+        if (day == null || year == null) {
+            return ""
+        }
+        val monthNum = months.indexOf(month)
+        if (monthNum == -1) {
+            return ""
+        }
+        if ((day < 1) || (day > daysInMonth(monthNum, year))) {
+            return ""
+        }
+        return String.format("%02d.%02d.%d", day, monthNum, year)
+    } catch (e: NumberFormatException) {
         return ""
     }
-    val day = parts[0].toIntOrNull()
-    val month = parts[1]
-    val year = parts[2].toIntOrNull()
-    if (day == null || year == null) {
-        return ""
-    }
-    val monthNum = months.indexOf(month)
-    if (monthNum == -1) {
-        return ""
-    }
-    if ((day < 1) || (day > daysInMonth(monthNum, year))) {
-        return ""
-    }
-    return String.format("%02d.%02d.%d", day, monthNum, year)
 }
 
 /**
@@ -119,38 +124,42 @@ fun dateStrToDigit(str: String): String {
  * входными данными.
  */
 fun dateDigitToStr(digital: String): String {
-    val months = listOf(
-        "",
-        "января",
-        "февраля",
-        "марта",
-        "апреля",
-        "мая",
-        "июня",
-        "июля",
-        "августа",
-        "сентября",
-        "октября",
-        "ноября",
-        "декабря"
-    )
-    val parts = digital.split(".")
-    if (parts.size != 3) {
+    try {
+        val months = listOf(
+            "",
+            "января",
+            "февраля",
+            "марта",
+            "апреля",
+            "мая",
+            "июня",
+            "июля",
+            "августа",
+            "сентября",
+            "октября",
+            "ноября",
+            "декабря"
+        )
+        val parts = digital.split(".")
+        if (parts.size != 3) {
+            return ""
+        }
+        val day = parts[0].toIntOrNull()
+        val month = parts[1].toIntOrNull()
+        val year = parts[2].toIntOrNull()
+        if (day == null || month == null || year == null) {
+            return ""
+        }
+        if (month !in 1..12) {
+            return ""
+        }
+        if (day > daysInMonth(month, year)) {
+            return ""
+        }
+        return String.format("%d %s %d", day, months[month], year)
+    } catch(e: NumberFormatException) {
         return ""
     }
-    val day = parts[0].toIntOrNull()
-    val month = parts[1].toIntOrNull()
-    val year = parts[2].toIntOrNull()
-    if (day == null || month == null || year == null) {
-        return ""
-    }
-    if (month !in 1..12) {
-        return ""
-    }
-    if (day > daysInMonth(month, year)) {
-        return ""
-    }
-    return String.format("%d %s %d", day, months[month], year)
 }
 
 /**
@@ -322,7 +331,7 @@ fun mostExpensive(description: String): String {
  */
 fun fromRoman(roman: String): Int {
     if (roman.isEmpty()) return -1
-    if (!roman.matches(Regex("""M*(CM)?D{0,3}(CD)?C{0,3}(XC)?L{0,3}(XL)?X{0,3}(IX)?V{0,3}(IV)?I{0,3}"""))) {
+    if (!roman.matches(Regex("""M*(CM)?(D|CD)?C{0,3}(XC)?(L|XL)?X{0,3}(IX)?(V|IV)?I{0,3}"""))) {
         return -1
     }
     val romans = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
