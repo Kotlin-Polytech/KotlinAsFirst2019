@@ -617,8 +617,14 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
         val diff = if (digitNumber(pairs[0][0]) > digitNumber(pairs[0][1])) 1 else 0
         it.write(" ".repeat(1 - diff) + "$lhv | $rhv\n")
-        var len = digitNumber(pairs[0][1]) + 1
-        it.write('-' + pairs[0][1].toString() + " ".repeat(digitNumber(lhv) + 4 - len - diff) + lhv / rhv)
+        var len = maxOf(digitNumber(pairs[0][1]) + 1, digitNumber(pairs[0][0]))
+        it.write(
+            " ".repeat(len - digitNumber(pairs[0][1]) - 1) + '-' + pairs[0][1].toString() + " ".repeat(
+                digitNumber(
+                    lhv
+                ) + 4 - len - diff
+            ) + lhv / rhv
+        )
         it.newLine()
         it.write("-".repeat(len))
         it.newLine()
@@ -632,10 +638,10 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             else it.write(" ".repeat(defaultSpaces - digitNumber(pair[0])) + pair[0].toString())
             it.newLine()
 
-            len = maxOf(digitNumber(pair[1]) + 1, digitNumber(pair[0]))
             it.write(" ".repeat(defaultSpaces - digitNumber(pair[1]) - 1) + '-' + pair[1].toString())
             it.newLine()
 
+            len = maxOf(digitNumber(pair[1]) + 1, digitNumber(pair[0]))
             it.write(" ".repeat(defaultSpaces - len) + "-".repeat(len))
             it.newLine()
 
