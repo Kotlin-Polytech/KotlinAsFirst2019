@@ -402,7 +402,54 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val inputLines = File(inputName).readLines()
+    val len = mapOf('s' to 2, 'b' to 2, 'i' to 1)
+
+    fun isTag(line: String, i: Int) =
+        when {
+            line[i] == '*' && i + 1 < line.length && line[i + 1] == '*' -> 'b'
+            line[i] == '~' && i + 1 < line.length && line[i + 1] == '~' -> 's'
+            line[i] == '*' -> 'i'
+            else -> null
+        }
+
+    File(outputName).bufferedWriter().use {
+        it.write("<html><body>")
+        var trigger = false
+        for (line in inputLines) {
+            if (line.isEmpty() && trigger) {
+                trigger = false
+                it.write("</p>")
+            } else {
+                if (!trigger) {
+                    trigger = true
+                    it.write("<p>")
+                }
+                val stack = mutableListOf<Char>()
+                var index = 0
+                while (index < line.length) {
+                    val tag = isTag(line, index)
+                    when (tag) {
+                        null -> {
+                            it.write(line[index].toString())
+                            index++
+                        }
+                        stack.lastOrNull() -> {
+                            it.write("</$tag>")
+                            stack.remove(tag)
+                            index += len[tag] ?: 1
+                        }
+                        else -> {
+                            it.write("<$tag>")
+                            stack.add(tag)
+                            index += len[tag] ?: 1
+                        }
+                    }
+                }
+            }
+        }
+        it.write("</p></body></html>")
+    }
 }
 
 /**
