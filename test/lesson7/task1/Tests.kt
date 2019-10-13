@@ -238,20 +238,11 @@ Basic, Ruby, Swift.
         File("temp.html").delete()
     }
 
-    private fun checkHtmlSimpleExample1() {
-        val result = File("temp.html").readText()
-        val expected = "<html><body><p><b><i>italbold</i></b></p></body></html>"
-        assertEquals(expected, result)
-        File("temp.html").delete()
-    }
-
     @Test
     @Tag("Hard")
     fun markdownToHtmlSimple() {
         markdownToHtmlSimple("input/markdown_simple.md", "temp.html")
         checkHtmlSimpleExample()
-        markdownToHtmlSimple("input/markdown_1", "temp.html")
-        checkHtmlSimpleExample1()
     }
 
     private fun checkHtmlListsExample() {
