@@ -419,10 +419,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         while (index < line.length) {
             index = line.indexOfAny(charArrayOf('~', '*'), index)
             if (index == -1) break
-            val tag = isTag(line, index)
-            when {
-                tag == null -> index++
-                tag in stack -> {
+            when (val tag = isTag(line, index)) {
+                null -> index++
+                in stack -> {
                     if (stack.isNotEmpty() || tag != stack.last()) {
                         for (invalidTag in stack.drop(stack.indexOf(tag) + 1)) {
                             val i = values.indexOfLast { it.replace(Regex("""[<>/]"""), "") == invalidTag.toString() }
@@ -444,11 +443,12 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 }
             }
         }
-        for (invalidTag in stack) {
-            val i = values.indexOfLast { it.replace(Regex("""[<>/]"""), "") == invalidTag.toString() }
-            indices.removeAt(i)
-            values.removeAt(i)
-            stack.remove(invalidTag)
+        if (stack.isNotEmpty()) {
+            for (invalidTag in stack) {
+                val i = values.indexOfLast { it.replace(Regex("""[<>/]"""), "") == invalidTag.toString() }
+                indices.removeAt(i)
+                values.removeAt(i)
+            }
         }
         val result = mutableMapOf<Int, String>()
         for (i in 0 until indices.size) {
