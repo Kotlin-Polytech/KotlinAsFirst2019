@@ -5,7 +5,6 @@ package lesson7.task1
 import lesson3.task1.digitNumber
 import lesson3.task1.revert
 import java.io.File
-import kotlin.math.max
 
 /**
  * Пример
@@ -403,8 +402,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val inputLines = File(inputName).readLines()
-    val len = mapOf('s' to 2, 'b' to 2, 'i' to 1)
-    val convert = mapOf('s' to "~~", 'b' to "**", 'i' to "*")
+    val len = mapOf("s" to 2, "b" to 2, "i" to 1)
     fun isTag(line: String, i: Int) =
         when {
             line[i] == '*' && i + 1 < line.length && line[i + 1] == '*' -> 'b'
@@ -412,6 +410,52 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             line[i] == '*' -> 'i'
             else -> null
         }
+
+    fun findTags(line: String): Map<Int, String> {
+        val indices = mutableListOf<Int>()
+        val values = mutableListOf<String>()
+        val stack = mutableListOf<Char>()
+        var index = 0
+        while (index < line.length) {
+            index = line.indexOfAny(charArrayOf('~', '*'), index)
+            if (index == -1) break
+            val tag = isTag(line, index)
+            when {
+                tag == null -> index++
+                tag in stack -> {
+                    if (stack.isNotEmpty() || tag != stack.last()) {
+                        for (invalidTag in stack.drop(stack.indexOf(tag) + 1)) {
+                            val i = values.indexOfLast { it.replace(Regex("""[<>/]"""), "") == invalidTag.toString() }
+                            indices.removeAt(i)
+                            values.removeAt(i)
+                            stack.remove(invalidTag)
+                        }
+                    }
+                    stack.remove(tag)
+                    indices.add(index)
+                    values.add("</$tag>")
+                    index += len[tag.toString()]!!
+                }
+                else -> {
+                    stack.add(tag)
+                    indices.add(index)
+                    values.add("<$tag>")
+                    index += len[tag.toString()]!!
+                }
+            }
+        }
+        for (invalidTag in stack) {
+            val i = values.indexOfLast { it.replace(Regex("""[<>/]"""), "") == invalidTag.toString() }
+            indices.removeAt(i)
+            values.removeAt(i)
+            stack.remove(invalidTag)
+        }
+        val result = mutableMapOf<Int, String>()
+        for (i in 0 until indices.size) {
+            result[indices[i]] = values[i]
+        }
+        return result
+    }
     File(outputName).bufferedWriter().use {
         it.write("<html><body>")
         var trigger = false
@@ -424,52 +468,17 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     trigger = true
                     it.write("<p>")
                 }
-                val stack = mutableListOf<Char>()
+                val tags = findTags(line)
                 var index = 0
                 while (index < line.length) {
-                    val tag = isTag(line, index)
-                    when (tag) {
-                        null -> {
-                            it.write(line[index].toString())
-                            index++
-                        }
-                        stack.lastOrNull() -> {
-                            it.write("</$tag>")
-                            stack.remove(tag)
-                            index += len[tag]!!
-                        }
-                        else -> {
-                            val nextTag = line.indexOf(convert[tag]!!, index + len[tag]!!)
-                            val upperTag = if (stack.isNotEmpty()) line.indexOf(
-                                convert[stack.last()]!!,
-                                index + len[tag]!!
-                            ) else -1
-                            when {
-                                nextTag == -1 -> {
-                                    it.write(line[index].toString())
-                                    index++
-                                }
-                                upperTag == -1 || stack.isEmpty() || nextTag < upperTag -> {
-                                    it.write("<$tag>")
-                                    stack.add(tag)
-                                    index += len[tag]!!
-                                }
-                                nextTag == upperTag -> {
-                                    if (line.indexOf(convert[stack.last()]!!, index + len[tag]!!) != -1) {
-                                        it.write("<$tag>")
-                                        stack.add(tag)
-                                        index += len[tag]!!
-                                    } else {
-                                        it.write(line[index].toString())
-                                        index++
-                                    }
-                                }
-                                else -> {
-                                    it.write(line[index].toString())
-                                    index++
-                                }
-                            }
-                        }
+                    if (index in tags.keys) {
+                        var tag = tags[index]!!
+                        it.write(tag)
+                        tag = tag.replace(Regex("""[<>/]"""), "")
+                        index += len[tag]!!
+                    } else {
+                        it.write(line[index].toString())
+                        index++
                     }
                 }
             }
