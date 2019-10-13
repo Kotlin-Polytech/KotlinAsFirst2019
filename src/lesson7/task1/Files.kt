@@ -403,11 +403,16 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val inputLines = File(inputName).readLines()
     val len = mapOf("s" to 2, "b" to 2, "i" to 1)
-    fun isTag(line: String, i: Int) =
-        when {
-            line[i] == '*' && i + 1 < line.length && line[i + 1] == '*' -> 'b'
-            line[i] == '~' && i + 1 < line.length && line[i + 1] == '~' -> 's'
-            line[i] == '*' -> 'i'
+    fun isTag(line: String, i: Int, stack: MutableList<Char>) =
+        when (line[i]) {
+            '~' -> if (i + 1 < line.length && line[i + 1] == '~') 's' else null
+            '*' -> {
+                if (i + 1 < line.length && line[i + 1] == '*') {
+                    if (i + 2 < line.length && line[i + 2] == '*' && stack.lastOrNull() == 'i') {
+                        'i'
+                    } else 'b'
+                } else 'i'
+            }
             else -> null
         }
 
@@ -419,7 +424,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         while (index < line.length) {
             index = line.indexOfAny(charArrayOf('~', '*'), index)
             if (index == -1) break
-            when (val tag = isTag(line, index)) {
+            when (val tag = isTag(line, index, stack)) {
                 null -> index++
                 in stack -> {
                     if (stack.isNotEmpty() || tag != stack.last()) {

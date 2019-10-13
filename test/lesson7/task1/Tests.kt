@@ -239,8 +239,8 @@ Basic, Ruby, Swift.
     }
 
     private fun checkHtmlSimpleExample1() {
-        val result = File("temp.html").readText().replace(Regex("[\\s\\n\\t]"), "")
-        val expected = "<html><body><p>NFwo'-uh5U\\*m</p></body></html>"
+        val result = File("temp.html").readText()
+        val expected = "<html><body><p><b><i>italbold</i></b></p></body></html>"
         assertEquals(expected, result)
         File("temp.html").delete()
     }
