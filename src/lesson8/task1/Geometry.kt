@@ -112,7 +112,7 @@ fun diameter(vararg points: Point): Segment {
     var maxPair = Pair(-1, -1)
     for (i in 0 until points.size - 1) {
         for (j in i until points.size) {
-            val dist = sqrt(sqr(points[i].x - points[j].x) + sqr(points[i].y - points[j].y))
+            val dist = points[i].distance(points[j])
             if (dist > max) {
                 maxPair = Pair(i, j)
             }
@@ -128,7 +128,7 @@ fun diameter(vararg points: Point): Segment {
  * Центр её должен находиться посередине между точками, а радиус составлять половину расстояния между ними
  */
 fun circleByDiameter(diameter: Segment): Circle {
-    val center = Point(abs(diameter.end.x - diameter.begin.x) / 2, abs(diameter.end.y - diameter.begin.y) / 2)
+    val center = Point((diameter.end.x + diameter.begin.x) / 2, (diameter.end.y + diameter.begin.y) / 2)
     val radius = diameter.end.distance(diameter.begin) / 2
     return Circle(center, radius)
 }
@@ -180,7 +180,7 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line = Line(s.begin, atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x)))
+fun lineBySegment(s: Segment): Line = Line(s.begin, abs(atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x))))
 
 /**
  * Средняя
