@@ -3,6 +3,7 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
+import lesson2.task1.triangleKind
 import kotlin.math.*
 
 /**
@@ -250,5 +251,13 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle = TODO()
+fun minContainingCircle(vararg points: Point): Circle {
+    val (a, b) = diameter(*points)
+    val c = points.find { (it != a) && (it != b) && (triangleKind(a.distance(b), b.distance(it), it.distance(a)) == 0) }
+    return if (c == null) {
+        circleByDiameter(Segment(a, b))
+    } else {
+        circleByThreePoints(a, b, c)
+    }
+}
 
