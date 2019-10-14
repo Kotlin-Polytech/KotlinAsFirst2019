@@ -158,7 +158,7 @@ class Line private constructor(val b: Double, val angle: Double) {
 
     fun crossPoint(other: Line): Point {
         val x = (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle)
-        val y = (x * sin(other.angle) + other.b) / cos(other.angle)
+        val y = (b * sin(other.angle) - other.b * sin(angle)) / sin(other.angle - angle)
         return Point(x, y)
     }
 
@@ -228,7 +228,7 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val center = bisectorByPoints(a, b).crossPoint(bisectorByPoints(a, c))
+    val center = bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c))
     val triangle = Triangle(a, b, c)
     val radius = a.distance(b) * b.distance(c) * c.distance(a) / (4 * triangle.area())
     return Circle(center, radius)
