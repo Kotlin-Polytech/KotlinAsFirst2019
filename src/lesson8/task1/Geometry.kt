@@ -108,12 +108,13 @@ data class Segment(val begin: Point, val end: Point) {
  */
 fun diameter(vararg points: Point): Segment {
     require(points.size >= 2)
-    val max = -1
+    var max = -1.0
     var maxPair = Pair(-1, -1)
     for (i in 0 until points.size - 1) {
-        for (j in i until points.size) {
+        for (j in i + 1 until points.size) {
             val dist = points[i].distance(points[j])
             if (dist > max) {
+                max = dist
                 maxPair = Pair(i, j)
             }
         }
@@ -194,9 +195,8 @@ fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line {
-    TODO()
-}
+fun bisectorByPoints(a: Point, b: Point): Line =
+    Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2), (abs(atan((a.y - b.y) / (a.x - b.x))) + PI / 2) % PI)
 
 /**
  * Средняя
@@ -204,7 +204,21 @@ fun bisectorByPoints(a: Point, b: Point): Line {
  * Задан список из n окружностей на плоскости. Найти пару наименее удалённых из них.
  * Если в списке менее двух окружностей, бросить IllegalArgumentException
  */
-fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
+fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
+    require(circles.size >= 2)
+    var min: Double? = null
+    var maxPair = Pair(-1, -1)
+    for (i in 0 until circles.size - 1) {
+        for (j in i + 1 until circles.size) {
+            val dist = circles[i].distance(circles[j])
+            if (min == null || dist < min) {
+                min = dist
+                maxPair = Pair(i, j)
+            }
+        }
+    }
+    return Pair(circles[maxPair.first], circles[maxPair.second])
+}
 
 /**
  * Сложная
