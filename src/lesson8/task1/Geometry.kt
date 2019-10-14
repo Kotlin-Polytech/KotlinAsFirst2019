@@ -141,7 +141,6 @@ fun circleByDiameter(diameter: Segment): Circle {
  * или: y * cos(angle) = x * sin(angle) + b, где b = point.y * cos(angle) - point.x * sin(angle).
  * Угол наклона обязан находиться в диапазоне от 0 (включительно) до PI (исключительно).
  */
-
 class Line private constructor(val b: Double, val angle: Double) {
     init {
         require(angle >= 0 && angle < PI) { "Incorrect line angle: $angle" }
@@ -155,7 +154,6 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Найти точку пересечения с другой линией.
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
-
     fun crossPoint(other: Line): Point {
         val x = (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle)
         val y = (b * sin(other.angle) - other.b * sin(angle)) / sin(other.angle - angle)
@@ -246,9 +244,12 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * соединяющий две самые удалённые точки в данном множестве.
  */
 fun minContainingCircle(vararg points: Point): Circle {
+    require(points.isNotEmpty())
+    if (points.size == 1) return Circle(points.first(), 0.0)
     val (a, b) = diameter(*points)
-    val c = points.find { (it != a) && (it != b) && (triangleKind(a.distance(b), b.distance(it), it.distance(a)) == 0) }
-    return if (c == null) {
+    val c =
+        points.filter { it != a && it != b }.maxBy { sqr(it.distance(a)) + sqr(it.distance(b)) - sqr(a.distance(b)) }
+    return if (c == null || sqr(c.distance(a)) + sqr(c.distance(b)) - sqr(a.distance(b)) < 0) {
         circleByDiameter(Segment(a, b))
     } else {
         circleByThreePoints(a, b, c)
