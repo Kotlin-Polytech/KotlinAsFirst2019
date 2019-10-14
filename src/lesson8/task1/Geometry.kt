@@ -141,10 +141,6 @@ fun circleByDiameter(diameter: Segment): Circle {
  * или: y * cos(angle) = x * sin(angle) + b, где b = point.y * cos(angle) - point.x * sin(angle).
  * Угол наклона обязан находиться в диапазоне от 0 (включительно) до PI (исключительно).
  */
-//y = (x * sin(angle) + b) / cos(angle), (x * sin(a) + b1) * cos(b) = (x * sin(b) + b2) * cos(a)
-//x * sin(a) * cos(b) + b1 * cos(b) = x * sin(b) * cos(a) + b2 * cos(a)
-//x (sin(a) * cos(b) - sin(b) * cos(a)) = b2 * cos(a) - b1 * cos(b)
-//x = (b2 * cos(a) - b1 * cos(b)) / (sin(a) * cos(b) - sin(b) * cos(a))
 
 class Line private constructor(val b: Double, val angle: Double) {
     init {
@@ -161,9 +157,7 @@ class Line private constructor(val b: Double, val angle: Double) {
      */
 
     fun crossPoint(other: Line): Point {
-        val x = (other.b * cos(angle) - b * cos(other.angle)) / (sin(angle) * cos(other.angle) - sin(other.angle) * cos(
-            angle
-        ))
+        val x = (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle)
         val y = (x * sin(other.angle) + other.b) / cos(other.angle)
         return Point(x, y)
     }
