@@ -147,33 +147,7 @@ fun bishopMoveNumber(start: Square, end: Square): Int {
  *          bishopTrajectory(Square(1, 3), Square(6, 8)) = listOf(Square(1, 3), Square(6, 8))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun bishopTrajectory(start: Square, end: Square): List<Square> {
-    return when (bishopMoveNumber(start, end)) {
-        -1 -> emptyList()
-        0 -> listOf(start)
-        1 -> listOf(start, end)
-        else ->
-            if (start.column + start.row > end.column + end.row) {
-                listOf(
-                    start,
-                    listOf(
-                        Square((start.column + end.column) / 2, start.row + (start.column - end.column) / 2),
-                        Square((start.column + end.column) / 2, start.row - (start.column - end.column) / 2)
-                    ).first { it.inside() },
-                    end
-                )
-            } else {
-                listOf(
-                    start,
-                    listOf(
-                        Square(start.column + (start.row - end.row) / 2,(start.row + end.row) / 2),
-                        Square(start.column - (start.row - end.row) / 2,(start.row + end.row) / 2)
-                    ).first { it.inside() },
-                    end
-                )
-            }
-    }
-}
+fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
 
 /**
  * Средняя
