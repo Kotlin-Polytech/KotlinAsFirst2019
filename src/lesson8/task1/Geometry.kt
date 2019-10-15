@@ -3,7 +3,6 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
-import lesson2.task1.triangleKind
 import kotlin.math.*
 
 /**
