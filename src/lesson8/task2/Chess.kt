@@ -204,6 +204,7 @@ fun kingMoveNumber(start: Square, end: Square): Int {
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
 fun kingTrajectory(start: Square, end: Square): List<Square> {
+    require(start.inside() && end.inside())
 
     val dist = Pair(abs(start.row - end.row), abs(start.column - end.column))
     var cornerMoves = min(dist.first, dist.second)
@@ -267,22 +268,24 @@ fun knightMoveNumber(start: Square, end: Square): Int {
     val allAround =
         listOf(Pair(-1, -2), Pair(1, -2), Pair(2, -1), Pair(2, 1), Pair(-1, 2), Pair(1, 2), Pair(-2, -1), Pair(-2, 1))
     val checked = mutableSetOf(start)
-    var currentHop = mapOf(start to 0)
-    val nextHop = mutableMapOf<Square, Int>()
+    var currentHop = listOf(start)
+    val nextHop = mutableListOf<Square>()
+    var count = 0
     while (end !in checked) {
-        for ((square) in currentHop) {
+        for ((column, row) in currentHop) {
             for ((addCol, addRow) in allAround) {
-                val squareAround = Square(square.column + addCol, square.row + addRow)
+                val squareAround = Square(column + addCol, row + addRow)
                 if (squareAround.inside() && squareAround !in checked) {
                     checked.add(squareAround)
-                    nextHop[squareAround] = currentHop[square]!! + 1
+                    nextHop.add(squareAround)
                 }
             }
         }
-        currentHop = nextHop.toMap()
+        currentHop = nextHop.toList()
         nextHop.clear()
+        count++
     }
-    return currentHop[end] ?: 0
+    return count
 }
 
 /**
@@ -306,6 +309,7 @@ fun knightMoveNumber(start: Square, end: Square): Int {
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
 fun knightTrajectory(start: Square, end: Square): List<Square> {
+    require(start.inside() && end.inside())
     val allAround =
         listOf(Pair(-1, -2), Pair(1, -2), Pair(2, -1), Pair(2, 1), Pair(-1, 2), Pair(1, 2), Pair(-2, -1), Pair(-2, 1))
     val checked = mutableMapOf<Square, Square?>(start to null)
