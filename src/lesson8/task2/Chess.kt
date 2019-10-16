@@ -262,7 +262,27 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
  * Пример: knightMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Конь может последовательно пройти через клетки (5, 2) и (4, 4) к клетке (6, 3).
  */
-fun knightMoveNumber(start: Square, end: Square): Int = TODO()
+fun knightMoveNumber(start: Square, end: Square): Int {
+    require(start.inside() && end.inside())
+    val allAround = listOf(Pair(-1, -2), Pair(1, -2), Pair(2, -1), Pair(2, 1), Pair(-1, 2), Pair(1, 2), Pair(-2, -1), Pair(-2, 1))
+    val checked = mutableSetOf(start)
+    var currentHop = mapOf(start to 0)
+    val nextHop = mutableMapOf<Square, Int>()
+    while (end !in checked) {
+        for ((square) in currentHop) {
+            for ((addCol, addRow) in allAround) {
+                val squareAround = Square(square.column + addCol, square.row + addRow)
+                if (squareAround.inside() && squareAround !in checked) {
+                    checked.add(squareAround)
+                    nextHop[squareAround] = currentHop[square]!! + 1
+                }
+            }
+        }
+        currentHop = nextHop.toMap()
+        nextHop.clear()
+    }
+    return currentHop[end] ?: 0
+}
 
 /**
  * Очень сложная
