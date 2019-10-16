@@ -264,7 +264,8 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
  */
 fun knightMoveNumber(start: Square, end: Square): Int {
     require(start.inside() && end.inside())
-    val allAround = listOf(Pair(-1, -2), Pair(1, -2), Pair(2, -1), Pair(2, 1), Pair(-1, 2), Pair(1, 2), Pair(-2, -1), Pair(-2, 1))
+    val allAround =
+        listOf(Pair(-1, -2), Pair(1, -2), Pair(2, -1), Pair(2, 1), Pair(-1, 2), Pair(1, 2), Pair(-2, -1), Pair(-2, 1))
     val checked = mutableSetOf(start)
     var currentHop = mapOf(start to 0)
     val nextHop = mutableMapOf<Square, Int>()
@@ -304,4 +305,30 @@ fun knightMoveNumber(start: Square, end: Square): Int {
  *
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun knightTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun knightTrajectory(start: Square, end: Square): List<Square> {
+    val allAround =
+        listOf(Pair(-1, -2), Pair(1, -2), Pair(2, -1), Pair(2, 1), Pair(-1, 2), Pair(1, 2), Pair(-2, -1), Pair(-2, 1))
+    val checked = mutableMapOf<Square, Square?>(start to null)
+    var currentHop = listOf(start)
+    val nextHop = mutableListOf<Square>()
+    while (end !in checked.keys) {
+        for (square in currentHop) {
+            for ((addCol, addRow) in allAround) {
+                val squareAround = Square(square.column + addCol, square.row + addRow)
+                if (squareAround.inside() && squareAround !in checked.keys) {
+                    checked[squareAround] = square
+                    nextHop.add(squareAround)
+                }
+            }
+        }
+        currentHop = nextHop.toList()
+        nextHop.clear()
+    }
+    var currentSquare: Square? = end
+    val result = mutableListOf<Square>()
+    while (currentSquare != null) {
+        result.add(currentSquare)
+        currentSquare = checked[currentSquare]
+    }
+    return result.reversed()
+}
