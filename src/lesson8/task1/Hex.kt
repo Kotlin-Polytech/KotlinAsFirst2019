@@ -4,7 +4,6 @@ package lesson8.task1
 
 import kotlin.math.abs
 import kotlin.math.max
-import kotlin.math.min
 
 /**
  * Точка (гекс) на шестиугольной сетке.
@@ -44,9 +43,8 @@ data class HexPoint(val x: Int, val y: Int) {
         val yDist = abs(y - other.y)
         val xDist = abs(x - other.x)
         return when {
-            x == other.x || y == other.y || (y + x == other.y + other.x) -> max(yDist, xDist)
             (y - other.y) * (x - other.x) > 0 -> yDist + xDist
-            else -> yDist + xDist - min(yDist, xDist)
+            else -> max(yDist, xDist)
         }
     }
 
