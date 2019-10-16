@@ -3,6 +3,7 @@
 package lesson8.task2
 
 import kotlin.math.abs
+import kotlin.math.min
 
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
@@ -147,7 +148,19 @@ fun bishopMoveNumber(start: Square, end: Square): Int {
  *          bishopTrajectory(Square(1, 3), Square(6, 8)) = listOf(Square(1, 3), Square(6, 8))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun bishopTrajectory(start: Square, end: Square): List<Square> {
+    fun intersection(a: Square, b: Square): Square {
+        val a1 = a.row - a.column
+        val b1 = b.row + b.column
+        return Square((b1 - a1) / 2, (a1 + b1) / 2)
+    }
+    return when (bishopMoveNumber(start, end)) {
+        -1 -> emptyList()
+        0 -> listOf(start)
+        1 -> listOf(start, end)
+        else -> listOf(start, setOf(intersection(start, end), intersection(end, start)).first { it.inside() }, end)
+    }
+}
 
 /**
  * Средняя
@@ -169,7 +182,12 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Пример: kingMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Король может последовательно пройти через клетки (4, 2) и (5, 2) к клетке (6, 3).
  */
-fun kingMoveNumber(start: Square, end: Square): Int = TODO()
+fun kingMoveNumber(start: Square, end: Square): Int {
+    require(start.inside() && end.inside())
+    val dist = Pair(abs(start.row - end.row), abs(start.column - end.column))
+    val cornerMoves = min(dist.first, dist.second)
+    return dist.first + dist.second - cornerMoves
+}
 
 /**
  * Сложная
@@ -185,7 +203,41 @@ fun kingMoveNumber(start: Square, end: Square): Int = TODO()
  *          kingTrajectory(Square(3, 5), Square(6, 2)) = listOf(Square(3, 5), Square(4, 4), Square(5, 3), Square(6, 2))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun kingTrajectory(start: Square, end: Square): List<Square> {
+
+    val dist = Pair(abs(start.row - end.row), abs(start.column - end.column))
+    var cornerMoves = min(dist.first, dist.second)
+
+    val result = mutableListOf(start)
+    var col = start.column
+    var row = start.row
+
+    val direction =
+        if (start.column < end.column) {
+            if (start.row < end.row) Pair(1, 1)
+            else Pair(1, -1)
+        } else {
+            if (start.row < end.row) Pair(-1, 1)
+            else Pair(-1, -1)
+        }
+    while (cornerMoves > 0) {
+        col += direction.first
+        row += direction.second
+        cornerMoves--
+        result.add(Square(col, row))
+    }
+    when {
+        col != end.column -> do {
+            col += direction.first
+            result.add(Square(col, row))
+        } while (col != end.column)
+        row != end.row -> do {
+            row += direction.second
+            result.add(Square(col, row))
+        } while (row != end.row)
+    }
+    return result
+}
 
 /**
  * Сложная
