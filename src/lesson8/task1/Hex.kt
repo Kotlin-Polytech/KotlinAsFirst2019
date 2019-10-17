@@ -275,18 +275,25 @@ fun pathBetweenHexes(from: HexPoint, to: HexPoint): List<HexPoint> {
  */
 fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
     val maxRadius = maxOf(a.distance(b), b.distance(c), c.distance(a))
-    fun nextHop(isCenter: HexPoint, distance: Int): Hexagon? {
-        if (isCenter.distance(a) == isCenter.distance(b) && isCenter.distance(b) == isCenter.distance(c))
-            return Hexagon(isCenter, distance)
-        val result = mutableSetOf<Hexagon?>(null)
-        if (distance < maxRadius) {
-            for (direction in Direction.values().dropLast(1)) {
-                result.add(nextHop(isCenter.move(direction, 1), distance + 1))
+    val checked = mutableSetOf<HexPoint>()
+    var currentHop = listOf(a, b, c)
+    val nextHop = mutableListOf<HexPoint>()
+    for (radius in 0..maxRadius) {
+        for (point in currentHop) {
+            if (point.distance(a) == point.distance(b) && point.distance(b) == point.distance(c))
+                return Hexagon(point, radius)
+            for (dir in Direction.values().filter { it != Direction.INCORRECT }) {
+                val nextPoint = point.move(dir, 1)
+                if (nextPoint !in checked) {
+                    checked.add(nextPoint)
+                    nextHop.add(nextPoint)
+                }
             }
         }
-        return result.filterNotNull().minBy { it.radius }
+        currentHop = nextHop.toList()
+        nextHop.clear()
     }
-    return nextHop(a, 0)
+    return null
 }
 
 /**
