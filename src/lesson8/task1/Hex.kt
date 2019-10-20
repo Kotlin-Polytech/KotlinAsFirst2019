@@ -305,7 +305,7 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
         return result.minBy { it.radius }
     }
 
-    val result = mutableListOf<Hexagon>()
+    val result = mutableListOf<Hexagon>() //?
     for (point in points) {
         val temp = hexagone(point, setOf(point), 0)
         if (temp != null) result.add(temp)
