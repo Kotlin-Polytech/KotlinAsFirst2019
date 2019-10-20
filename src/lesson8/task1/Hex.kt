@@ -267,27 +267,43 @@ fun pathBetweenHexes(from: HexPoint, to: HexPoint): List<HexPoint> {
  * Если все три точки совпадают, вернуть шестиугольник нулевого радиуса с центром в данной точке.
  */
 fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
+
     val maxRadius = maxOf(a.distance(b), b.distance(c), c.distance(a))
-    val checked = mutableSetOf<HexPoint>()
-    var currentHop = listOf(a, b, c)
-    val nextHop = mutableListOf<HexPoint>()
     val directions = Direction.values().filter { it != Direction.INCORRECT }
-    for (radius in 0..maxRadius) {
-        for (point in currentHop) {
-            if (point.distance(a) == point.distance(b) && point.distance(b) == point.distance(c))
-                return Hexagon(point, radius)
-            for (dir in directions) {
-                val nextPoint = point.move(dir, 1)
-                if (nextPoint !in checked) {
-                    checked.add(nextPoint)
-                    nextHop.add(nextPoint)
+    val points = setOf(a, b, c)
+
+    fun hexagone(startPoint: HexPoint, inRange: MutableSet<HexPoint>, radius: Int): Hexagon? {
+        val result = mutableListOf<Hexagon>()
+        for (direction in directions) {
+            var currentRadius = radius + 1
+            var currentPoint = startPoint.move(direction, 1)
+            while (currentRadius <= maxRadius) {
+                val inCurrentRange = mutableSetOf<HexPoint>()
+                for (point in points) {
+                    if (point.distance(currentPoint) == currentRadius) inCurrentRange.add(point)
                 }
+                if (!inCurrentRange.containsAll(inRange)) break
+                if (inCurrentRange == points) {
+                    result.add(Hexagon(currentPoint, currentRadius))
+                    break
+                }
+                if (inCurrentRange.size > inRange.size) {
+                    val temp = hexagone(currentPoint, inCurrentRange, currentRadius)
+                    if (temp != null) result.add(temp)
+                }
+                currentPoint = currentPoint.move(direction, 1)
+                currentRadius++
             }
         }
-        currentHop = nextHop.toList()
-        nextHop.clear()
+        return result.minBy { it.radius }
     }
-    return null
+
+    val result = mutableListOf<Hexagon>()
+    for (point in points) {
+        val temp = hexagone(point, mutableSetOf(point), 0)
+        if (temp != null) result.add(temp)
+    }
+    return result.minBy { it.radius }
 }
 
 /**
