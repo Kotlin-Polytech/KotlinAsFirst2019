@@ -268,7 +268,27 @@ fun pathBetweenHexes(from: HexPoint, to: HexPoint): List<HexPoint> {
  * Если все три точки совпадают, вернуть шестиугольник нулевого радиуса с центром в данной точке.
  */
 fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
-    TODO()
+    val maxRadius = maxOf(a.distance(b), b.distance(c), c.distance(a))
+    val checked = mutableSetOf<HexPoint>()
+    var currentHop = listOf(a, b, c)
+    val nextHop = mutableListOf<HexPoint>()
+    val directions = Direction.values().filter { it != Direction.INCORRECT }
+    for (radius in 0..maxRadius) {
+        for (point in currentHop) {
+            if (point.distance(a) == point.distance(b) && point.distance(b) == point.distance(c))
+                return Hexagon(point, radius)
+            for (dir in directions) {
+                val nextPoint = point.move(dir, 1)
+                if (nextPoint !in checked) {
+                    checked.add(nextPoint)
+                    nextHop.add(nextPoint)
+                }
+            }
+        }
+        currentHop = nextHop.toList()
+        nextHop.clear()
+    }
+    return null
 }
 
 /**
