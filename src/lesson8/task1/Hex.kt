@@ -286,7 +286,7 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
                     if (point.distance(currentPoint) == currentRadius) inCurrentRange.add(point)
                 }
 
-                //if (!inCurrentRange.containsAll(inRange)) break
+                if (!inCurrentRange.containsAll(inRange)) break
 
                 if (inCurrentRange == points) {
                     result.add(Hexagon(currentPoint, currentRadius))
