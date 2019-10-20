@@ -286,7 +286,7 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
                     if (point.distance(currentPoint) == currentRadius) inCurrentRange.add(point)
                 }
 
-                if (!inCurrentRange.containsAll(inRange)) break
+                //if (!inCurrentRange.containsAll(inRange)) break
 
                 if (inCurrentRange == points) {
                     result.add(Hexagon(currentPoint, currentRadius))
@@ -305,7 +305,12 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
         return result.minBy { it.radius }
     }
 
-    return hexagone(a, setOf(a), 0)
+    val result = mutableListOf<Hexagon>()
+    for (point in points) {
+        val temp = hexagone(point, setOf(point), 0)
+        if (temp != null) result.add(temp)
+    }
+    return result.minBy { it.radius }
 }
 
 /**
