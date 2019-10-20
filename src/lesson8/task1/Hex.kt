@@ -272,25 +272,32 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
     val directions = Direction.values().filter { it != Direction.INCORRECT }
     val points = setOf(a, b, c)
 
-    fun hexagone(startPoint: HexPoint, inRange: MutableSet<HexPoint>, radius: Int): Hexagon? {
+    if (points.size == 1) return Hexagon(points.first(), 0)
+
+    fun hexagone(startPoint: HexPoint, inRange: Set<HexPoint>, radius: Int): Hexagon? {
         val result = mutableListOf<Hexagon>()
         for (direction in directions) {
             var currentRadius = radius + 1
             var currentPoint = startPoint.move(direction, 1)
             while (currentRadius <= maxRadius) {
+
                 val inCurrentRange = mutableSetOf<HexPoint>()
                 for (point in points) {
                     if (point.distance(currentPoint) == currentRadius) inCurrentRange.add(point)
                 }
+
                 if (!inCurrentRange.containsAll(inRange)) break
+
                 if (inCurrentRange == points) {
                     result.add(Hexagon(currentPoint, currentRadius))
                     break
                 }
+
                 if (inCurrentRange.size > inRange.size) {
                     val temp = hexagone(currentPoint, inCurrentRange, currentRadius)
                     if (temp != null) result.add(temp)
                 }
+
                 currentPoint = currentPoint.move(direction, 1)
                 currentRadius++
             }
@@ -298,12 +305,7 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
         return result.minBy { it.radius }
     }
 
-    val result = mutableListOf<Hexagon>()
-    for (point in points) {
-        val temp = hexagone(point, mutableSetOf(point), 0)
-        if (temp != null) result.add(temp)
-    }
-    return result.minBy { it.radius }
+    return hexagone(a, setOf(a), 0)
 }
 
 /**
