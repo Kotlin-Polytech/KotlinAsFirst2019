@@ -134,6 +134,10 @@ class HexTests {
             Hexagon(HexPoint(4, 3), 3),
             hexagonByThreePoints(HexPoint(1, 3), HexPoint(4, 6), HexPoint(7, 0))
         )
+        assertEquals(
+            Hexagon(HexPoint(-618, -617), 382),
+            hexagonByThreePoints(HexPoint(-338, -999), HexPoint(-1000, -266), HexPoint(-237, -999))
+        )
     }
 
     @Test

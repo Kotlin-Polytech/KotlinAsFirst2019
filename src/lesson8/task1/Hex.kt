@@ -39,14 +39,8 @@ data class HexPoint(val x: Int, val y: Int) {
      * Расстояние вычисляется как число единичных отрезков в пути между двумя гексами.
      * Например, путь межу гексами 16 и 41 (см. выше) может проходить через 25, 34, 43 и 42 и имеет длину 5.
      */
-    fun distance(other: HexPoint): Int {
-        val yDist = abs(y - other.y)
-        val xDist = abs(x - other.x)
-        return when {
-            (y - other.y) * (x - other.x) > 0 -> yDist + xDist
-            else -> max(yDist, xDist)
-        }
-    }
+    fun distance(other: HexPoint): Int =
+        (abs(this.x - other.x) + abs(this.y - other.y) + abs((this.x + this.y) - (other.x + other.y))) / 2
 
     override fun toString(): String = "$y.$x"
 }
@@ -274,26 +268,7 @@ fun pathBetweenHexes(from: HexPoint, to: HexPoint): List<HexPoint> {
  * Если все три точки совпадают, вернуть шестиугольник нулевого радиуса с центром в данной точке.
  */
 fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
-    val maxRadius = maxOf(a.distance(b), b.distance(c), c.distance(a))
-    val checked = mutableSetOf<HexPoint>()
-    var currentHop = listOf(a, b, c)
-    val nextHop = mutableListOf<HexPoint>()
-    for (radius in 0..maxRadius) {
-        for (point in currentHop) {
-            if (point.distance(a) == point.distance(b) && point.distance(b) == point.distance(c))
-                return Hexagon(point, radius)
-            for (dir in Direction.values().filter { it != Direction.INCORRECT }) {
-                val nextPoint = point.move(dir, 1)
-                if (nextPoint !in checked) {
-                    checked.add(nextPoint)
-                    nextHop.add(nextPoint)
-                }
-            }
-        }
-        currentHop = nextHop.toList()
-        nextHop.clear()
-    }
-    return null
+    TODO()
 }
 
 /**
