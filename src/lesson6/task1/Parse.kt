@@ -73,23 +73,23 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
+val months = listOf(
+    "",
+    "января",
+    "февраля",
+    "марта",
+    "апреля",
+    "мая",
+    "июня",
+    "июля",
+    "августа",
+    "сентября",
+    "октября",
+    "ноября",
+    "декабря"
+)
 fun dateStrToDigit(str: String): String {
     try {
-        val months = listOf(
-            "",
-            "января",
-            "февраля",
-            "марта",
-            "апреля",
-            "мая",
-            "июня",
-            "июля",
-            "августа",
-            "сентября",
-            "октября",
-            "ноября",
-            "декабря"
-        )
         val parts = str.split(" ")
         if (parts.size != 3) {
             return ""
@@ -108,7 +108,7 @@ fun dateStrToDigit(str: String): String {
             return ""
         }
         return String.format("%02d.%02d.%d", day, monthNum, year)
-    } catch (e: NumberFormatException) {
+    } catch (e: Error) {
         return ""
     }
 }
@@ -125,21 +125,6 @@ fun dateStrToDigit(str: String): String {
  */
 fun dateDigitToStr(digital: String): String {
     try {
-        val months = listOf(
-            "",
-            "января",
-            "февраля",
-            "марта",
-            "апреля",
-            "мая",
-            "июня",
-            "июля",
-            "августа",
-            "сентября",
-            "октября",
-            "ноября",
-            "декабря"
-        )
         val parts = digital.split(".")
         if (parts.size != 3) {
             return ""
@@ -157,7 +142,7 @@ fun dateDigitToStr(digital: String): String {
             return ""
         }
         return String.format("%d %s %d", day, months[month], year)
-    } catch(e: NumberFormatException) {
+    } catch (e: Error) {
         return ""
     }
 }
@@ -331,7 +316,7 @@ fun mostExpensive(description: String): String {
  */
 fun fromRoman(roman: String): Int {
     if (roman.isEmpty()) return -1
-    if (!roman.matches(Regex("""M*(CM)?(D|CD)?C{0,3}(XC)?(L|XL)?X{0,3}(IX)?(V|IV)?I{0,3}"""))) {
+    if (!roman.matches(Regex("""M*(CM|DC{0,3}|CD|C{0,3})?(XC|LX{0,3}|XL|X{0,3})?(IX|VI{0,3}|IV|I{0,3})?"""))) {
         return -1
     }
     val romans = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")

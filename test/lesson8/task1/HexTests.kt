@@ -122,6 +122,9 @@ class HexTests {
         assertNotNull(
             hexagonByThreePoints(HexPoint(719, -1000), HexPoint(-999, -1000), HexPoint(-955, -557))
         )
+        assertNotNull(
+            hexagonByThreePoints(HexPoint(-760, 148), HexPoint(136, -1000), HexPoint(-676, -999))
+        )
         assertEquals(
             Hexagon(HexPoint(4, 3), 3),
             hexagonByThreePoints(HexPoint(1, 4), HexPoint(1, 5), HexPoint(6, 4))
