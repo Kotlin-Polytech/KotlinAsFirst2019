@@ -160,6 +160,6 @@ class HexTests {
         val result = minContainingHexagon(*points)
         assertEquals(3, result.radius)
         assertTrue(points.all { result.contains(it) })
+        assertNotNull(minContainingHexagon(HexPoint(3, 1), HexPoint(2, 3), HexPoint(5, 4)))
     }
-
 }
