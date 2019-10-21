@@ -119,6 +119,9 @@ class HexTests {
     @Test
     @Tag("Impossible")
     fun hexagonByThreePoints() {
+        assertNotNull(
+            hexagonByThreePoints(HexPoint(-558, -999), HexPoint(-558, 199), HexPoint(-441, -999))
+        )
         assertEquals(
             Hexagon(HexPoint(4, 3), 3),
             hexagonByThreePoints(HexPoint(1, 3), HexPoint(4, 6), HexPoint(7, 0))
