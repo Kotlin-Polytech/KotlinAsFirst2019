@@ -298,7 +298,35 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
  * Пример: 13, 32, 45, 18 -- шестиугольник радиусом 3 (с центром, например, в 15)
  */
 fun minContainingHexagon(vararg points: HexPoint): Hexagon {
-    TODO()
+    require(points.isNotEmpty())
+    if (points.size == 1) return Hexagon(points[0], 0)
+    var farPoint = points[0]
+    var maxDistance = 0
+    var maxRadius = 0
+    for (point in points) {
+        val dist = points.map { point.distance(it) }.filter { it != 0 }.min()!!
+        if (dist > maxDistance) {
+            farPoint = point
+            maxDistance = dist
+        }
+        val otherDist = points.map { point.distance(it) }.max()!!
+        if (otherDist > maxRadius) {
+            maxRadius = otherDist
+        }
+    }
+    val directions = Direction.values().filter { it != Direction.INCORRECT }
+    for (radius in (maxDistance / 2)..maxRadius) {
+        var currentPoint = farPoint.move(Direction.DOWN_LEFT, radius)
+        for (direction in directions) {
+            var moves = 0
+            while (moves != radius) {
+                if (points.all { currentPoint.distance(it) <= radius }) return Hexagon(currentPoint, radius)
+                currentPoint = currentPoint.move(direction, 1)
+                moves++
+            }
+        }
+    }
+    return Hexagon(HexPoint(0, 0), 0)
 }
 
 
