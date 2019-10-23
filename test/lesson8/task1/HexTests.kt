@@ -156,10 +156,33 @@ class HexTests {
     @Test
     @Tag("Impossible")
     fun minContainingHexagon() {
-        val points = arrayOf(HexPoint(3, 1), HexPoint(3, 2), HexPoint(5, 4), HexPoint(8, 1))
-        val result = minContainingHexagon(*points)
+        var points = arrayOf(HexPoint(3, 1), HexPoint(3, 2), HexPoint(5, 4), HexPoint(8, 1))
+        var result = minContainingHexagon(*points)
         assertEquals(3, result.radius)
         assertTrue(points.all { result.contains(it) })
         assertNotNull(minContainingHexagon(HexPoint(3, 1), HexPoint(2, 3), HexPoint(5, 4)))
+        points = arrayOf(
+            HexPoint(-672, 994),
+            HexPoint(-999, -999),
+            HexPoint(-557, -999),
+            HexPoint(-57, 180),
+            HexPoint(-557, -999),
+            HexPoint(-557, -999),
+            HexPoint(-227, -557),
+            HexPoint(-1000, -557),
+            HexPoint(-557, -738),
+            HexPoint(-542, 179),
+            HexPoint(677, 453),
+            HexPoint(-688, -557),
+            HexPoint(-999, 98),
+            HexPoint(-1000, 950),
+            HexPoint(-14, -1000),
+            HexPoint(-888, -1000),
+            HexPoint(-999, -1000),
+            HexPoint(-1000, -999)
+        )
+        result = minContainingHexagon(*points)
+        assertEquals(1565, result.radius)
+        assertTrue(points.all { result.contains(it) })
     }
 }

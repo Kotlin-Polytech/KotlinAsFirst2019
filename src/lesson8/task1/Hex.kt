@@ -134,15 +134,7 @@ enum class Direction {
      * Для INCORRECT вернуть INCORRECT
      */
     fun opposite(): Direction =
-        when (this) {
-            RIGHT -> LEFT
-            LEFT -> RIGHT
-            UP_RIGHT -> DOWN_LEFT
-            DOWN_LEFT -> UP_RIGHT
-            UP_LEFT -> DOWN_RIGHT
-            DOWN_RIGHT -> UP_LEFT
-            else -> INCORRECT
-        }
+        if (this != INCORRECT) values().dropLast(1)[(ordinal + 3) % 6] else INCORRECT
 
     /**
      * Средняя
@@ -156,14 +148,7 @@ enum class Direction {
      */
     fun next(): Direction {
         require(this != INCORRECT)
-        return when (this) {
-            RIGHT -> UP_RIGHT
-            UP_RIGHT -> UP_LEFT
-            UP_LEFT -> LEFT
-            LEFT -> DOWN_LEFT
-            DOWN_LEFT -> DOWN_RIGHT
-            else -> RIGHT
-        }
+        return values().dropLast(1)[(ordinal + 1) % 6]
     }
 
     /**
@@ -304,12 +289,13 @@ fun minContainingHexagon(vararg points: HexPoint): Hexagon {
     var maxDistance = 0
     var maxRadius = 0
     for (point in points) {
-        val dist = points.map { point.distance(it) }.filter { it != 0 }.min()!!
+        val distances = points.map { point.distance(it) }
+        val dist = distances.filter { it != 0 }.min()!!
         if (dist > maxDistance) {
             farPoint = point
             maxDistance = dist
         }
-        val otherDist = points.map { point.distance(it) }.max()!!
+        val otherDist = distances.max()!!
         if (otherDist > maxRadius) {
             maxRadius = otherDist
         }
