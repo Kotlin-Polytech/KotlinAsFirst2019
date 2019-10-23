@@ -242,10 +242,9 @@ fun convert(n: Int, base: Int): List<Int> {
 fun convertToString(n: Int, base: Int): String {
     val list = convert(n, base)
     val result = mutableListOf<String>()
-    val latinStart = 'a'.toInt() - 10
     for (i in list) {
         if (i < 10) result.add(i.toString())
-        else result.add((latinStart + i).toChar().toString())
+        else result.add(('a' + i - 10).toString())
     }
     return result.joinToString("")
 }
